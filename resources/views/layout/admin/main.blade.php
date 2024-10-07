@@ -91,6 +91,31 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
+              <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  const loginButton = document.querySelector('button[type="submit"]');
+                  
+                  @if ($message = Session::get('success'))
+                    Swal.fire({
+                      title: 'Success!',
+                      text: '{{ $message }}',
+                      icon: 'success',
+                      confirmButtonColor: '#007bff'
+                    });
+                  @endif
+
+                  @if ($message = Session::get('failed'))
+                    Swal.fire({
+                      title: 'Error!',
+                      text: '{{ $message }}',
+                      icon: 'error',
+                      confirmButtonColor: '#ff0000'
+                    });
+                  @endif
+                });
+              </script>
+              
               @yield('content')
             </div>
             <!-- / Content -->
@@ -112,6 +137,9 @@
       <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
+
+    {{-- sweet alert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->

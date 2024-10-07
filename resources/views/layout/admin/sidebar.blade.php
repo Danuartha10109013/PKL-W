@@ -1,5 +1,5 @@
 <div class="app-brand demo">
-    <a href="index.html" class="app-brand-link">
+    <a href="{{route('pegawai.dashboard')}}" class="app-brand-link">
       <span class="app-brand-logo demo">
         <img src="{{asset('SEALBSM_LOGO.png')}}" width="10%" alt="">
       </span>
@@ -14,18 +14,33 @@
 
   <ul class="menu-inner py-1">
     <!-- Dashboard -->
-    <li class="menu-item active">
-      <a href="index.html" class="menu-link">
+    <li class="menu-item {{ request()->routeIs('pegawai.dashboard') ? 'active' : '' }}">
+      <a href="{{ route('pegawai.dashboard') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div data-i18n="Analytics">Dashboard</div>
       </a>
     </li>
+    
+    <li class="menu-item {{ request()->routeIs('pegawai.komisi') ? 'active' : '' }}">
+      <a href="{{ route('pegawai.komisi') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <div data-i18n="Analytics">Komisi Penjualan</div>
+      </a>
+    </li>
+    
+    <li class="menu-item {{ request()->routeIs('pegawai.target') ? 'active' : '' }}">
+      <a href="{{ route('pegawai.target') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <div data-i18n="Analytics">Penentuan Target</div>
+      </a>
+    </li>
+    
 
     <!-- Layouts -->
-    <li class="menu-item">
+    {{-- <li class="menu-item">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-layout"></i>
-        <div data-i18n="Layouts">Layouts</div>
+        <div data-i18n="Layouts">Komisi Penjualan</div>
       </a>
 
       <ul class="menu-sub">
@@ -63,7 +78,7 @@
     <li class="menu-item">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-dock-top"></i>
-        <div data-i18n="Account Settings">Account Settings</div>
+        <div data-i18n="Account Settings">Komisi Penjualan</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item">
@@ -332,5 +347,5 @@
         <i class="menu-icon tf-icons bx bx-file"></i>
         <div data-i18n="Documentation">Documentation</div>
       </a>
-    </li>
+    </li> --}}
   </ul>
