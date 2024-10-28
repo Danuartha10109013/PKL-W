@@ -1,5 +1,5 @@
 <div class="app-brand demo">
-    <a href="{{route('admin.dashboard')}}" class="app-brand-link">
+    <a href="{{route('pegawai.dashboard')}}" class="app-brand-link">
       <span class="app-brand-logo demo">
         <img src="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" width="10%" alt="">
       </span>
@@ -14,8 +14,8 @@
 
   <ul class="menu-inner py-1">
     <!-- Dashboard -->
-    <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-      <a href="{{ route('admin.dashboard') }}" class="menu-link">
+    <li class="menu-item {{ request()->routeIs('pegawai.dashboard') ? 'active' : '' }}">
+      <a href="{{ route('pegawai.dashboard') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div data-i18n="Analytics">Dashboard</div>
       </a>

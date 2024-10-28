@@ -87,10 +87,10 @@
           <div class="card">
             <div class="card-body">
               <!-- Logo -->
-              <div class="app-brand justify-content-center d-flex flex-column align-items-center mb-4">
-                <a href="index.html" class="app-brand-link gap-2 text-center">
-                  <span class="app-brand-logo demo">
-                    <img src="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" alt="Company Logo">
+              <div class=" justify-content-center d-flex flex-column align-items-center mb-4">
+                <a href="index.html" class="-link gap-2 text-center">
+                  <span class="-logo demo">
+                    <img src="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" width="20%" alt="Company Logo">
                   </span>
                 </a>
               </div>

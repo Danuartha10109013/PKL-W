@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JobCardController;
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
@@ -42,6 +43,10 @@ Route::middleware([AutoLogout::class])->group(function () {
         Route::prefix('komisi')->group(function () {
             Route::get('/',[KomisiController::class,'index'])->name('komisi');
             Route::get('/add',[KomisiController::class,'add'])->name('komisi.add');
+            Route::get('/jobcards/search', [JobCardController::class, 'searchJobCard'])->name('jobcards.search');
+            Route::get('/jobcards/details', [JobCardController::class, 'getJobCardDetails'])->name('jobcards.details');
+            Route::post('/komisi/store', [KomisiController::class, 'store'])->name('komisi.store');
+
         });
         Route::prefix('target')->group(function () {
             Route::get('/',[TargetController::class,'index'])->name('target');

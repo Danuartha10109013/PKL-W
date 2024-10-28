@@ -32,7 +32,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{asset('SEALBSM_LOGO.png')}}" />
+    <link rel="icon" type="image/x-icon" href="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -72,7 +72,11 @@
         <!-- Menu -->
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-          @include('layout.admin.sidebar')
+          @if (Auth::user()->role == 0)
+            @include('layout.admin.sidebar')
+          @else
+            @include('layout.pegawai.sidebar')
+          @endif
         </aside>
         <!-- / Menu -->
 
