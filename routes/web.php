@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobCardController;
+use App\Http\Controllers\KelolaUserController;
 use App\Http\Controllers\KomisiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
@@ -30,10 +31,11 @@ Route::middleware([AutoLogout::class])->group(function () {
     Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.'], function () {
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard'); //not same
-
-        // Manage Employees
-        Route::prefix('managepegawai.kelolapegawai')->group(function () {
-            
+        Route::prefix('k-user')->group(function () {
+            Route::get('/',[KelolaUserController::class,'index'])->name('k-user');
+            Route::post('/store',[KelolaUserController::class,'store'])->name('k-user.store');
+            Route::put('/update/{id}',[KelolaUserController::class,'update'])->name('k-user.update');
+            Route::delete('/destroy/{id}',[KelolaUserController::class,'destroy'])->name('k-user.destroy');
         });
     });
     Route::group(['prefix' => 'pegawai', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {
@@ -46,11 +48,15 @@ Route::middleware([AutoLogout::class])->group(function () {
             Route::get('/jobcards/search', [JobCardController::class, 'searchJobCard'])->name('jobcards.search');
             Route::get('/jobcards/details', [JobCardController::class, 'getJobCardDetails'])->name('jobcards.details');
             Route::post('/komisi/store', [KomisiController::class, 'store'])->name('komisi.store');
+            Route::delete('/komisi/delete/{id}', [KomisiController::class, 'delete'])->name('komisi.delete');
+            Route::put('/komisi/update/{id}', [KomisiController::class, 'update'])->name('komisi.update');
+            Route::get('/komisi/print/{id}', [KomisiController::class, 'print'])->name('komisi.print');
 
         });
         Route::prefix('target')->group(function () {
             Route::get('/',[TargetController::class,'index'])->name('target');
         });
+       
     });
     
 });

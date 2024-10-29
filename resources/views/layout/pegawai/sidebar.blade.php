@@ -23,14 +23,14 @@
     
     <li class="menu-item {{ request()->routeIs('pegawai.komisi') ? 'active' : '' }}">
       <a href="{{ route('pegawai.komisi') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <i class="menu-icon tf-icons bx bx-money"></i>
         <div data-i18n="Analytics">Komisi Penjualan</div>
       </a>
     </li>
     
     <li class="menu-item {{ request()->routeIs('pegawai.target') ? 'active' : '' }}">
       <a href="{{ route('pegawai.target') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <i class="menu-icon tf-icons bx bx-target-lock"></i>
         <div data-i18n="Analytics">Penentuan Target</div>
       </a>
     </li>

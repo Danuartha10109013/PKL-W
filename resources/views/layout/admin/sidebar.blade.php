@@ -34,6 +34,12 @@
         <div data-i18n="Analytics">Penentuan Target</div>
       </a>
     </li>
+    <li class="menu-item {{ request()->routeIs('admin.k-user') ? 'active' : '' }}">
+      <a href="{{ route('admin.k-user') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bxs-user"></i>
+        <div data-i18n="Analytics">Kelola User</div>
+      </a>
+    </li>
     
 
     <!-- Layouts -->

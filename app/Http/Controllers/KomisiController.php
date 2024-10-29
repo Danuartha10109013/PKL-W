@@ -45,14 +45,15 @@ class KomisiController extends Controller
         $komisi->date = $request->date;
         $komisi->no_po = $request->no_po;
         $komisi->kurs = $request->kurs;
+        $komisi->bop = $request->totalbop;
         $komisi->gp = $request->totalsp - $request->totalbop; 
         $komisi->it = $komisi->gp * 0.20;
         $komisi->se = $komisi->it * 0.70;
         $komisi->as = $komisi->it * 0.10;
         $komisi->adm = $komisi->it * 0.10;
         $komisi->mng = $komisi->it * 0.10;
-        $komisi->no_jo = "";
-        $komisi->jo_date = "";
+        $komisi->no_jo = "123rtyu";
+        $komisi->jo_date = now()->toDateString();
         $komisi->kurs = $request->kurs;
         
 
