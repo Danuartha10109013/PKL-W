@@ -1,5 +1,5 @@
 <div class="app-brand demo">
-    <a href="{{route('admin.dashboard')}}" class="app-brand-link">
+    <a href="{{route('direktur.dashboard')}}" class="app-brand-link">
       <span class="app-brand-logo demo">
         <img src="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" width="10%" alt="">
       </span>
@@ -14,28 +14,28 @@
 
   <ul class="menu-inner py-1">
     <!-- Dashboard -->
-    <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-      <a href="{{ route('admin.dashboard') }}" class="menu-link">
+    <li class="menu-item {{ request()->routeIs('direktur.dashboard') ? 'active' : '' }}">
+      <a href="{{ route('direktur.dashboard') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div data-i18n="Analytics">Dashboard</div>
       </a>
     </li>
     
-    <li class="menu-item {{ request()->routeIs('pegawai.komisi') ? 'active' : '' }}">
-      <a href="{{ route('pegawai.komisi') }}" class="menu-link">
+    <li class="menu-item {{ request()->routeIs('direktur.komisi') ? 'active' : '' }}">
+      <a href="{{ route('direktur.komisi') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-        <div data-i18n="Analytics">Komisi Penjualan</div>
+        <div data-i18n="Analytics">Laporan Komisi Penjualan</div>
       </a>
     </li>
     
-    <li class="menu-item {{ request()->routeIs('pegawai.target') ? 'active' : '' }}">
-      <a href="{{ route('pegawai.target') }}" class="menu-link">
+    <li class="menu-item {{ request()->routeIs('direktur.target') ? 'active' : '' }}">
+      <a href="{{ route('direktur.target') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-        <div data-i18n="Analytics">Penentuan Target</div>
+        <div data-i18n="Analytics">Laporan Target</div>
       </a>
     </li>
-    <li class="menu-item {{ request()->routeIs('admin.k-user') ? 'active' : '' }}">
-      <a href="{{ route('admin.k-user') }}" class="menu-link">
+    <li class="menu-item {{ request()->routeIs('direktur.k-user') ? 'active' : '' }}">
+      <a href="{{ route('direktur.k-user') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bxs-user"></i>
         <div data-i18n="Analytics">Kelola User</div>
       </a>

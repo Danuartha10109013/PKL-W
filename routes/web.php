@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index'])->name('auth.login');
 Route::post('/login-proses', [LoginController::class, 'login_proses'])->name('login-proses');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/cc', [JobCardController::class, 'cc'])->name('cc');
 
 
 //auto Logout
@@ -28,7 +29,7 @@ Route::middleware([AutoLogout::class])->group(function () {
 
 
     // Admin routes group with middleware and prefix
-    Route::group(['prefix' => 'admin', 'middleware' => ['admin'], 'as' => 'admin.'], function () {
+    Route::group(['prefix' => 'direktur', 'middleware' => ['direktur'], 'as' => 'direktur.'], function () {
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard'); //not same
         Route::prefix('k-user')->group(function () {
@@ -36,6 +37,13 @@ Route::middleware([AutoLogout::class])->group(function () {
             Route::post('/store',[KelolaUserController::class,'store'])->name('k-user.store');
             Route::put('/update/{id}',[KelolaUserController::class,'update'])->name('k-user.update');
             Route::delete('/destroy/{id}',[KelolaUserController::class,'destroy'])->name('k-user.destroy');
+        });
+
+        Route::prefix('komisi')->group(function () {
+            Route::get('/',[KomisiController::class,'index'])->name('komisi');
+        });
+        Route::prefix('target')->group(function () {
+            Route::get('/',[KomisiController::class,'index'])->name('target');
         });
     });
     Route::group(['prefix' => 'pegawai', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {

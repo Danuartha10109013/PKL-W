@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobCardM extends Model
+class JobcardDetailM extends Model
 {
     use HasFactory;
 
     protected $connection = 'mysql_second';
-    protected $table = 'jobcard';
+    protected $table = 'jobcard_detail';
 }

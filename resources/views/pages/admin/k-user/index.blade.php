@@ -38,7 +38,7 @@
                                 {{ $d->name }}</td>
                             <td>{{ $d->username }}</td>
                             <td>{{ $d->email }}</td>
-                            <td>{{ $d->role == '0' ? 'Admin' : 'User' }}</td>
+                            <td>{{ $d->role == '0' ? 'direktur' : 'User' }}</td>
                             <td>{{ $d->active == '1' ? 'Aktif' : 'Tidak Aktif' }}</td>
                             <td>
                                 <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $d->id }}">
@@ -59,7 +59,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('admin.k-user.update', $d->id) }}" method="POST">
+                                        <form action="{{ route('direktur.k-user.update', $d->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="mb-3">
@@ -77,7 +77,7 @@
                                             <div class="mb-3">
                                                 <label for="role" class="form-label">Role</label>
                                                 <select class="form-select" id="role" name="role">
-                                                    <option value="0" {{ $d->role == '0' ? 'selected' : '' }}>Admin</option>
+                                                    <option value="0" {{ $d->role == '0' ? 'selected' : '' }}>direktur</option>
                                                     <option value="1" {{ $d->role == '1' ? 'selected' : '' }}>User</option>
                                                 </select>
                                             </div>
@@ -117,7 +117,7 @@
                                         Apakah Anda yakin ingin menghapus user <strong>{{ $d->name }}</strong>?
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{{ route('admin.k-user.destroy', $d->id) }}" method="POST">
+                                        <form action="{{ route('direktur.k-user.destroy', $d->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -143,7 +143,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('admin.k-user.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('direktur.k-user.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <!-- Profile Image Input -->
                         <div class="mb-3 text-center">
@@ -169,7 +169,7 @@
                         <div class="mb-3">
                             <label for="newRole" class="form-label">Role</label>
                             <select class="form-select" id="newRole" name="role">
-                                <option value="0">Admin</option>
+                                <option value="0">direktur</option>
                                 <option value="1">User</option>
                             </select>
                         </div>

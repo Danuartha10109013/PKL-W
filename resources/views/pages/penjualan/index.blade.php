@@ -70,7 +70,7 @@
                             <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->mng, 0, ',', '.') }}</span></td>
                             <td class="d-flex justify-content-center">
                                 <button class="btn btn-success btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $komisi->id }}"><i class="bx bxs-edit-alt"></i></button>
-                                <button class="btn btn-warning btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#printModal{{ $komisi->id }}"><i class="bx bxs-printer"></i></button>
+                                <a href="{{route('pegawai.komisi.print',$komisi->id)}}" class="btn btn-warning"><i class="bx bxs-printer"></i></a>
                                 <button class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $komisi->id }}"><i class="bx bxs-trash"></i></button>
                             </td>
                         </tr>

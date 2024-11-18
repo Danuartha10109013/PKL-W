@@ -38,8 +38,33 @@ class KomisiController extends Controller
             'no_revisi' => 'required|string|max:255',
         ]);
 
+        $lastno = KomisiM::whereDate('created_at', now()->toDateString())->max('no');
+
+        if (!$lastno) {
+            $lastno = '001';
+        } else {
+            // Increment the last number and pad it to three digits
+            $lastno = str_pad((int)$lastno + 1, 3, '0', STR_PAD_LEFT);
+        }
+
+        // Format today's date in the desired format and concatenate with the last number
+        $kode = 'IS.'.now()->format('dmy') .'-'. $lastno;
+
+        $lastjo = KomisiM::whereDate('created_at', now()->toDateString())->max('no_jo');
+
+        if (!$lastjo) {
+            $lastjo = '001';
+        } else {
+            // Increment the last number and pad it to three digits
+            $lastjo = str_pad((int)$lastjo + 1, 3, '0', STR_PAD_LEFT);
+        }
+
+        // Format today's date in the desired format and concatenate with the last number
+        $no_jo = $lastjo.'JO'.'-'.now()->format('dmy') ;
+        // dd($kode);
+
         $komisi = new KomisiM();
-        $komisi->no = $request->no;
+        $komisi->no = $kode;
         $komisi->no_jobcard = $request->no_jobcard;
         $komisi->customer_name = $request->customer_name;
         $komisi->date = $request->date;
@@ -52,11 +77,10 @@ class KomisiController extends Controller
         $komisi->as = $komisi->it * 0.10;
         $komisi->adm = $komisi->it * 0.10;
         $komisi->mng = $komisi->it * 0.10;
-        $komisi->no_jo = "123rtyu";
+        $komisi->no_jo = $no_jo;
         $komisi->jo_date = now()->toDateString();
         $komisi->kurs = $request->kurs;
         
-
         // Save the Komisi Penjualan entry
         $komisi->save();
 
@@ -64,6 +88,15 @@ class KomisiController extends Controller
         return redirect()->route('pegawai.komisi')->with('success', 'Komisi Penjualan saved successfully!');
     
     }
+
+    public function delete($id){
+        $data = KomisiM::find($id);
+        $data->delete();
+        return redirect()->back()->with('success', 'Komis Telah Berhasil Dihapus');
+    }
     
-    
+    public function print($id){
+        $data = KomisiM::find($id);
+        return view('pages.penjualan.print',compact('data'));
+    }
 }

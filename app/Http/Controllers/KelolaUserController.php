@@ -90,7 +90,7 @@ class KelolaUserController extends Controller
         $user->save();
 
         // Redirect back with a success message
-        return redirect()->route('admin.k-user')->with('success', 'User details updated successfully.');
+        return redirect()->route('direktur.k-user')->with('success', 'User details updated successfully.');
     }
 
     // Update the user's password
@@ -104,7 +104,7 @@ class KelolaUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('admin.k-user')->with('success', 'Password updated successfully.');
+        return redirect()->route('direktur.k-user')->with('success', 'Password updated successfully.');
     }
 
     // Delete the specified user
@@ -112,6 +112,6 @@ class KelolaUserController extends Controller
     {
         $user= User::find($id);
         $user->delete();
-        return redirect()->route('admin.k-user')->with('success', 'User deleted successfully.');
+        return redirect()->route('direktur.k-user')->with('success', 'User deleted successfully.');
     }
 }
