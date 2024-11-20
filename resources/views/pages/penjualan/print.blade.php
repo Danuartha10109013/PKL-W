@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Incentive Sales</title>
+<link rel="icon" type="image/x-icon" href="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" />
+
+@if (Route::is('pegawai.komisi_c.print'))
+        <title>Incentive Sales Costumer</title>
+    @else
+        <title>Incentive Sales</title>
+    @endif
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -86,7 +92,12 @@
 </head>
 <body>
 <div class="container">
-    <div class="header-title">INCENTIVE SALES</div>
+    @if (Route::is('pegawai.komisi_c.print'))
+        <div class="header-title">INCENTIVE SALES (CUSTOMER)</div>
+    @else
+        <div class="header-title">INCENTIVE SALES</div>
+    @endif
+
     <div class="header-title">No: {{$data->no}}</div>
 
     <div class="header-details">

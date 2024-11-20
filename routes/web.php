@@ -40,10 +40,11 @@ Route::middleware([AutoLogout::class])->group(function () {
         });
 
         Route::prefix('komisi')->group(function () {
-            Route::get('/',[KomisiController::class,'index'])->name('komisi');
+            Route::get('/',[KomisiController::class,'laporan'])->name('komisi');
+            Route::get('/print',[KomisiController::class,'print_laporan'])->name('komisi.print');
         });
         Route::prefix('target')->group(function () {
-            Route::get('/',[KomisiController::class,'index'])->name('target');
+            Route::get('/',[TargetController::class,'laporan'])->name('target');
         });
     });
     Route::group(['prefix' => 'pegawai', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {
@@ -58,6 +59,7 @@ Route::middleware([AutoLogout::class])->group(function () {
             Route::post('/komisi/store', [KomisiController::class, 'store'])->name('komisi.store');
             Route::delete('/komisi/delete/{id}', [KomisiController::class, 'delete'])->name('komisi.delete');
             Route::put('/komisi/update/{id}', [KomisiController::class, 'update'])->name('komisi.update');
+            Route::get('/komisi_c/print/{id}', [KomisiController::class, 'print_c'])->name('komisi_c.print');
             Route::get('/komisi/print/{id}', [KomisiController::class, 'print'])->name('komisi.print');
 
         });
