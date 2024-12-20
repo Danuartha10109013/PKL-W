@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Validator;
 class KomisiController extends Controller
 {
     public function index(){
-        $komisis = KomisiM::all();
-        $komisi_customer = KomisiCostumerM::all();
+        $komisis = KomisiM::orderBy('created_at','desc')->get();
+        $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
 
         return view('pages.penjualan.index',compact('komisis','komisi_customer'));
     }
@@ -75,11 +75,14 @@ class KomisiController extends Controller
         $komisi->kurs = $request->kurs;
         $komisi->bop = $request->totalbop;
         $komisi->gp = $request->totalsp - $request->totalbop; 
+        $komisi->total_sp = $request->totalsp; 
         $komisi->it = $komisi->gp * 0.20;
         $komisi->se = $komisi->it * 0.70;
         $komisi->as = $komisi->it * 0.10;
         $komisi->adm = $komisi->it * 0.10;
         $komisi->mng = $komisi->it * 0.10;
+        $komisi->no_it = $request->no_it;
+        $komisi->sales_name = $request->sales_name;
         $komisi->no_jo = $no_jo;
         $komisi->jo_date = now()->toDateString();
         $komisi->kurs = $request->kurs;
@@ -97,12 +100,15 @@ class KomisiController extends Controller
         $komisi_customer->kurs = $request->kurs;
         $komisi_customer->bop = $request->totalbop;
         $komisi_customer->gp = $request->totalsp - $request->totalbop; 
+        $komisi_customer->total_sp = $request->totalsp; 
         $komisi_customer->it = $komisi_customer->gp * 0.30;
         $komisi_customer->se = $komisi_customer->it * 0.70;
         $komisi_customer->as = $komisi_customer->it * 0.10;
         $komisi_customer->adm = $komisi_customer->it * 0.10;
         $komisi_customer->mng = $komisi_customer->it * 0.10;
         $komisi_customer->no_jo = $no_jo;
+        $komisi_customer->no_it = $request->no_it;
+        $komisi_customer->sales_name = $request->sales_name;
         $komisi_customer->jo_date = now()->toDateString();
         $komisi_customer->kurs = $request->kurs;
         

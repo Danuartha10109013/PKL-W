@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <h5 class="card-title text-primary">Komisi Penjualan</h5>
                             <p class="mb-4">
-                                You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in your profile.
+                                Add more Incentive sales & Incentive sales (customer)<span class="fw-bold"></span>
                             </p>
 
                             <a href="{{ route('pegawai.komisi.add') }}" class="btn btn-sm btn-outline-primary">Tambah Komisi Penjualan</a>

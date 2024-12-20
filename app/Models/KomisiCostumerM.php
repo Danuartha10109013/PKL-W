@@ -27,5 +27,7 @@ class KomisiCostumerM extends Model
         'no_jo',
         'jo_date',
         'sales_name',
+        'total_sp',
+        'no_it',
     ];
 }

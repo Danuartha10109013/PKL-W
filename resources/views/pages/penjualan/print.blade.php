@@ -109,7 +109,7 @@
         <div class="details-group">
             <span>JO Number: {{$data->no_jo}}</span>
             <span>JO Date: {{$data->jo_date}}</span>
-            <span>Kurs: {{$data->kurs}}</span>
+            <span>Kurs: $ {{ number_format($data->kurs, 0, ',', '.') }}</span>
         </div>
     </div>
 
@@ -125,7 +125,7 @@
             </tr>
             <tr>
                 <th>IDR</th>
-                <th>IDR</th>
+                <th>USD</th>
                 <th>USD</th>
                 <th>IDR</th>
                 <th>(SP - BoP)</th>
@@ -151,26 +151,26 @@
                     $totalsp = \App\Models\JobcardM::where('no_jobcard',$data->no_jobcard)->value('totalsp');
                 @endphp
                 <td>1</td>
-                <td class="currency">Rp {{$totalsp}}</td>
+                <td class="currency">Rp. {{$totalsp}}</td>
                 
-                <td class="currency"></td>
-                <td class="currency"></td>
-                <td class="currency">Rp {{$data->bop}}</td>
-                <td class="currency">Rp {{$data->gp}}</td>
-                <td class="currency">Rp {{$data->it}}</td>
-                <td class="currency">Rp {{$data->it}}</td>
-                <td class="currency">Rp. {{$data->se}}</td>
-                <td class="currency">Rp {{$data->as}}</td>
-                <td class="currency">Rp {{$data->adm}}</td>
-                <td class="currency">Rp {{$data->mng}}</td>
+                <td class="currency">$ {{ number_format($totalsp / $data->kurs, 0, ',', '.') }}</td>
+                <td class="currency">$ {{ number_format($data->bop / $data->kurs, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->bop, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->gp, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->it, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->it, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->se, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->as, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->adm, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->mng, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td colspan="7" class="right-align">TOTAL</td>
-                <td class="currency">Rp {{$data->it}}</td>
-                <td class="currency">Rp {{$data->se}}</td>
-                <td class="currency">Rp {{$data->as}}</td>
-                <td class="currency">Rp {{$data->adm}}</td>
-                <td class="currency">Rp {{$data->mng}}</td>
+                <td class="currency">Rp. {{ number_format($data->it, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->se, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->as, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->adm, 0, ',', '.') }}</td>
+                <td class="currency">Rp. {{ number_format($data->mng, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

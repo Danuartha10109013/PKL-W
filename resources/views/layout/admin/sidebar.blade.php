@@ -1,8 +1,10 @@
 <div class="app-brand demo">
     <a href="{{route('direktur.dashboard')}}" class="app-brand-link">
-      <span class="app-brand-logo demo">
-        <img src="{{asset('PT. Bersama Sahabat Makmur Logo.png')}}" width="10%" alt="">
+      <span class="app-brand-logo demo d-flex align-items-center">
+        <img src="{{ asset('PT. Bersama Sahabat Makmur Logo.png') }}" width="10%" alt="" class="me-2">
+        <span class="fw fw-bold" style="font-size: 24px">SBM</span>
       </span>
+    
     </a>
 
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -23,14 +25,14 @@
     
     <li class="menu-item {{ request()->routeIs('direktur.komisi') ? 'active' : '' }}">
       <a href="{{ route('direktur.komisi') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <i class="menu-icon tf-icons bx bxs-report"></i>
         <div data-i18n="Analytics">Laporan Komisi Penjualan</div>
       </a>
     </li>
     
     <li class="menu-item {{ request()->routeIs('direktur.target') ? 'active' : '' }}">
       <a href="{{ route('direktur.target') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <i class="menu-icon tf-icons bx bxs-report"></i>
         <div data-i18n="Analytics">Laporan Target</div>
       </a>
     </li>

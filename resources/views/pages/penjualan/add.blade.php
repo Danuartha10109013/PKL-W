@@ -170,6 +170,26 @@
                                             readonly
                                         />
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="no_revisi" class="form-label">No IT</label>
+                                        <input
+                                            type="text"
+                                            name="no_it"
+                                            id="no_revisi"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="no_revisi" class="form-label">Sales Name</label>
+                                        <input
+                                            type="text"
+                                            name="sales_name"
+                                            id="no_revisi"
+                                            class="form-control"
+                                            required
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
