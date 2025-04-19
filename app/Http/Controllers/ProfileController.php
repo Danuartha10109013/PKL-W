@@ -17,15 +17,15 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request->all());
         $user = User::find($request->user_id);
+        // dd($user);
 
         // Validate input
         $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'username' => 'required|string|max:255',
-            'password' => 'nullable|string|min:8|', // For password confirmation, you can add an extra field for confirmation in the form
+            'password' => 'nullable|string', // For password confirmation, you can add an extra field for confirmation in the form
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
         ]);
 
@@ -47,7 +47,7 @@ class ProfileController extends Controller
         $user->username = $request->username;
 
         // Check if password is provided, then hash and save
-        if ($request->filled('password')) {
+        if ($request != null) {
             $user->password = Hash::make($request->password);
         }
 

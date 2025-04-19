@@ -4,16 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKomisiMTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+return new class extends Migration {
+    public function up(): void
     {
-        Schema::create('komisi_m', function (Blueprint $table) {
+        Schema::create('komisi_costumer', function (Blueprint $table) {
             $table->id();
             $table->string('no')->nullable();
             $table->string('no_jobcard')->nullable();
@@ -28,19 +22,17 @@ class CreateKomisiMTable extends Migration
             $table->decimal('adm', 15, 2)->nullable();
             $table->decimal('mng', 15, 2)->nullable();
             $table->string('no_jo')->nullable();
+            $table->decimal('bop', 15, 2);
             $table->date('jo_date')->nullable();
             $table->string('sales_name')->nullable();
+            $table->decimal('total_sp', 15, 2)->nullable();
+            $table->string('no_it');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('komisi_m');
+        Schema::dropIfExists('komisi_costumer');
     }
-}
+};

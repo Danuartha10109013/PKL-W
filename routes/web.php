@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalculationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobCardController;
 use App\Http\Controllers\KelolaUserController;
@@ -45,6 +46,11 @@ Route::middleware([AutoLogout::class])->group(function () {
         });
         Route::prefix('target')->group(function () {
             Route::get('/',[TargetController::class,'laporan'])->name('target');
+        });
+        Route::prefix('calculation')->group(function () {
+            Route::get('/',[CalculationController::class,'index'])->name('calculation');
+            Route::post('/update', [CalculationController::class, 'updateInline'])->name('calculation.update');
+
         });
     });
     Route::group(['prefix' => 'pegawai', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {

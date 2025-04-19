@@ -46,7 +46,8 @@
                             <th>No</th>
                             <th>No Job Card</th>
                             <th>No PO</th>
-                            <th>Bottom Price</th>
+                            <th>Bottom Of Price</th>
+                            <th>Total Sales Price</th>
                             <th>GP</th>
                             <th>IT</th>
                             <th>Sales Engineer</th>
@@ -63,6 +64,7 @@
                                 <td>{{ $komisi->no_jobcard }}</td>
                                 <td>{{ $komisi->no_po }}</td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->bop, 0, ',', '.') }}</span></td>
+                                <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->total_sp, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->gp, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->it, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->se, 0, ',', '.') }}</span></td>
@@ -70,14 +72,14 @@
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->adm, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->mng, 0, ',', '.') }}</span></td>
                                 <td class="d-flex justify-content-center">
-                                    <button class="btn btn-success btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $komisi->id }}"><i class="bx bxs-edit-alt"></i></button>
+                                    <button class="btn btn-success btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal1{{ $komisi->id }}"><i class="bx bxs-edit-alt"></i></button>
                                     <a href="{{route('pegawai.komisi.print',$komisi->id)}}" class="btn btn-warning"><i class="bx bxs-printer"></i></a>
                                     <button class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $komisi->id }}"><i class="bx bxs-trash"></i></button>
                                 </td>
                             </tr>
                             
                             <!-- Edit Modal -->
-                            <div class="modal fade" id="editModal{{ $komisi->id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="editModal1{{ $komisi->id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -90,8 +92,12 @@
                                                 @method('PUT')
                                                 <!-- Add your input fields here, pre-filled with $komisi data -->
                                                 <div class="mb-3">
-                                                    <label for="no_po" class="form-label">No PO</label>
-                                                    <input type="text" name="no_po" id="no_po" class="form-control" value="{{ $komisi->no_po }}">
+                                                    <label for="no_it" class="form-label">No IT</label>
+                                                    <input type="text" name="no_it" id="no_it" class="form-control" value="{{ $komisi->no_it }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="sales_name" class="form-label">Sales Name</label>
+                                                    <input type="text" name="sales_name" id="sales_name" class="form-control" value="{{ $komisi->sales_name }}">
                                                 </div>
                                                 <!-- Repeat for other fields as needed -->
                                                 <button type="submit" class="btn btn-primary">Save changes</button>
@@ -162,7 +168,8 @@
                             <th>No</th>
                             <th>No Job Card</th>
                             <th>No PO</th>
-                            <th>Bottom Price</th>
+                            <th>Bottom Of Price</th>
+                            <th>Total Sales Proce</th>
                             <th>GP</th>
                             <th>IT</th>
                             <th>Sales Engineer</th>
@@ -179,6 +186,7 @@
                                 <td>{{ $kc->no_jobcard }}</td>
                                 <td>{{ $kc->no_po }}</td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($kc->bop, 0, ',', '.') }}</span></td>
+                                <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($kc->total_sp, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($kc->gp, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($kc->it, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($kc->se, 0, ',', '.') }}</span></td>
@@ -206,8 +214,12 @@
                                                 @method('PUT')
                                                 <!-- Add your input fields here, pre-filled with $komisi data -->
                                                 <div class="mb-3">
-                                                    <label for="no_po" class="form-label">No PO</label>
-                                                    <input type="text" name="no_po" id="no_po" class="form-control" value="{{ $kc->no_po }}">
+                                                    <label for="no_it" class="form-label">No IT</label>
+                                                    <input type="text" name="no_it" id="no_it" class="form-control" value="{{ $kc->no_it }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="sales_name" class="form-label">Sales Name</label>
+                                                    <input type="text" name="sales_name" id="sales_name" class="form-control" value="{{ $kc->sales_name }}">
                                                 </div>
                                                 <!-- Repeat for other fields as needed -->
                                                 <button type="submit" class="btn btn-primary">Save changes</button>

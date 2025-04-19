@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalculationM;
 use App\Models\KomisiCostumerM;
 use App\Models\KomisiM;
 use App\Models\KomisiPenjualanM;
@@ -65,6 +66,7 @@ class KomisiController extends Controller
         // Format today's date in the desired format and concatenate with the last number
         $no_jo = $lastjo.'JO'.'-'.now()->format('dmy') ;
         // dd($kode);
+        $cal0= CalculationM::find(1);
 
         $komisi = new KomisiM();
         $komisi->no = $kode;
@@ -76,11 +78,11 @@ class KomisiController extends Controller
         $komisi->bop = $request->totalbop;
         $komisi->gp = $request->totalsp - $request->totalbop; 
         $komisi->total_sp = $request->totalsp; 
-        $komisi->it = $komisi->gp * 0.20;
-        $komisi->se = $komisi->it * 0.70;
-        $komisi->as = $komisi->it * 0.10;
-        $komisi->adm = $komisi->it * 0.10;
-        $komisi->mng = $komisi->it * 0.10;
+        $komisi->it = $komisi->gp * $cal0->it;
+        $komisi->se = $komisi->it * $cal0->se;
+        $komisi->as = $komisi->it * $cal0->as;
+        $komisi->adm = $komisi->it * $cal0->adm;
+        $komisi->mng = $komisi->it * $cal0->mng;
         $komisi->no_it = $request->no_it;
         $komisi->sales_name = $request->sales_name;
         $komisi->no_jo = $no_jo;
@@ -90,6 +92,8 @@ class KomisiController extends Controller
         // Save the Komisi Penjualan entry
         $komisi->save();
 
+        $cal1= CalculationM::find(2);
+        
         //komisi customer
         $komisi_customer = new KomisiCostumerM();
         $komisi_customer->no = $kode;
@@ -101,11 +105,11 @@ class KomisiController extends Controller
         $komisi_customer->bop = $request->totalbop;
         $komisi_customer->gp = $request->totalsp - $request->totalbop; 
         $komisi_customer->total_sp = $request->totalsp; 
-        $komisi_customer->it = $komisi_customer->gp * 0.30;
-        $komisi_customer->se = $komisi_customer->it * 0.70;
-        $komisi_customer->as = $komisi_customer->it * 0.10;
-        $komisi_customer->adm = $komisi_customer->it * 0.10;
-        $komisi_customer->mng = $komisi_customer->it * 0.10;
+        $komisi_customer->it = $komisi_customer->gp * $cal1->it;
+        $komisi_customer->se = $komisi_customer->it * $cal1->se;
+        $komisi_customer->as = $komisi_customer->it * $cal1->as;
+        $komisi_customer->adm = $komisi_customer->it * $cal1->adm;
+        $komisi_customer->mng = $komisi_customer->it * $cal1->mng;
         $komisi_customer->no_jo = $no_jo;
         $komisi_customer->no_it = $request->no_it;
         $komisi_customer->sales_name = $request->sales_name;
@@ -118,6 +122,20 @@ class KomisiController extends Controller
         // Return a success message
         return redirect()->route('pegawai.komisi')->with('success', 'Komisi Penjualan saved successfully!');
     
+    }
+
+    public function update(Request $request,$id){
+        // dd($id);
+        $data = KomisiM::find($id);
+        $data->no_it = $request->no_it;
+        $data->sales_name = $request->sales_name;
+        $data->save();
+        $data1 = KomisiCostumerM::find($id);
+        $data1->no_it = $request->no_it;
+        $data1->sales_name = $request->sales_name;
+        $data1->save();
+
+        return redirect()->back()->with('success', 'Incentive sales has been Udated');
     }
 
     public function delete($id){

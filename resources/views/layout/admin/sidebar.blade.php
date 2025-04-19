@@ -36,6 +36,12 @@
         <div data-i18n="Analytics">Laporan Target</div>
       </a>
     </li>
+    <li class="menu-item {{ request()->routeIs('direktur.calculation') ? 'active' : '' }}">
+      <a href="{{ route('direktur.calculation') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bxs-calculator"></i>
+        <div data-i18n="Analytics">Kelola Calculation</div>
+      </a>
+    </li>
     <li class="menu-item {{ request()->routeIs('direktur.k-user') ? 'active' : '' }}">
       <a href="{{ route('direktur.k-user') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bxs-user"></i>

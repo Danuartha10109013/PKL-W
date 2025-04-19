@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('profile')->nullable();
+        Schema::table('komisi', function (Blueprint $table) {
+            $table->unsignedBigInteger('customer_id')->nullable()->after('id'); // letakkan setelah kolom id
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('profile');
+        Schema::table('komisi', function (Blueprint $table) {
+            $table->dropColumn('customer_id');
         });
     }
 };
