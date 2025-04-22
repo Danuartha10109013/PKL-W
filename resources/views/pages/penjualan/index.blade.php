@@ -156,7 +156,7 @@
 
     </div>
 
-    <div class="card mt-5">
+    {{-- <div class="card mt-5">
         <div class="card-header">
             <h5 class="card-title fw-bold">Incentive Sales (Customer)</h5>
         </div>
@@ -275,5 +275,5 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection

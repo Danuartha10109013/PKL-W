@@ -182,11 +182,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password Baru</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="min: 8 Character" required>
                         </div>
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                            <input type="password" class="form-control" id="password_confirmation" placeholder="min: 8 Character" name="password_confirmation" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>

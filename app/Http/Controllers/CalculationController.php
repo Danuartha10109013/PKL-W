@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 class CalculationController extends Controller
 {
     public function index (){
-        $data = CalculationM::all();
+        // $data = CalculationM::all();
+        $data = CalculationM::where('id',1)->get();
 
         return view('pages.admin.calculation.index',compact('data'));
     }

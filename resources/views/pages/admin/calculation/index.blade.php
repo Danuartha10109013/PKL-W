@@ -16,11 +16,11 @@
                         <tr>
                             <th>No</th>
                             <th>IT</th>
-                            <th>SE</th>
-                            <th>AS</th>
-                            <th>ADM</th>
-                            <th>MNG</th>
-                            <th>TYPE</th>
+                            <th>Sales Enginer</th>
+                            <th>Aplications</th>
+                            <th>Admin</th>
+                            <th>Manager</th>
+                            {{-- <th>TYPE</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -42,7 +42,7 @@
                                 <td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="mng">
                                     {{ $d->mng }}
                                 </td>
-                                <td>{{ $d->jenis == '0' ? 'Non Customer' : 'Customer' }}</td>
+                                {{-- <td>{{ $d->jenis == '0' ? 'Non Customer' : 'Customer' }}</td> --}}
                             </tr>
                         @endforeach
                     </tbody>
