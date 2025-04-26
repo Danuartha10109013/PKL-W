@@ -17,20 +17,20 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'cc-lengkap-cc',
-            'username' => 'cc',
-            'email' => 'cc@cc.cc',
+            'name' => 'pegawai',
+            'username' => 'pegawai',
+            'email' => 'pegawai@gmail.com',
             'role' => '1',
             'active' => '1',
-            'password' => Hash::make('cc'),
+            'password' => Hash::make('12345'),
         ]);
         User::factory()->create([
-            'name' => 'admin',
-            'username' => 'admin',
-            'email' => 'admin@cc.cc',
+            'name' => 'direktur',
+            'username' => 'direktur',
+            'email' => 'direktur@gmail.com',
             'role' => '0',
             'active' => '1',
-            'password' => Hash::make('admin'),
+            'password' => Hash::make('12345'),
         ]);
     }
 }
