@@ -9,6 +9,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TargetController;
 use App\Http\Middleware\AutoLogout;
+use App\Models\KomisiM;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 // Routes for authentication
@@ -16,7 +18,23 @@ Route::get('/', [LoginController::class, 'index'])->name('auth.login');
 Route::post('/login-proses', [LoginController::class, 'login_proses'])->name('login-proses');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/cc', [JobCardController::class, 'cc'])->name('cc');
+Route::get('/cek-jobcard', function (\Illuminate\Http\Request $request) {
+    $no_jobcard = $request->query('no_jobcard');
+    $sudah = \App\Models\KomisiM::where('no_jobcard', $no_jobcard)->exists();
+    return response()->json(['sudah' => $sudah]);
+});
 
+Route::get('/pegawai/komisi/jobcards/load', function () {
+    $response = Http::get('http://127.0.0.1:8001/api/data-api');
+    $data = $response->json();
+
+    foreach ($data as &$item) {
+        $cek = KomisiM::where('no_jobcard', $item['no_jobcard'])->exists();
+        $item['status'] = $cek ? 'Sudah dibuat' : 'Belum dibuat';
+    }
+
+    return response()->json($data);
+});
 
 //auto Logout
 Route::middleware([AutoLogout::class])->group(function () {

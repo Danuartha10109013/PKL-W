@@ -2,7 +2,7 @@
     <a href="{{route('direktur.dashboard')}}" class="app-brand-link">
       <span class="app-brand-logo demo d-flex align-items-center">
         <img src="{{ asset('PT. Bersama Sahabat Makmur Logo.png') }}" width="10%" alt="" class="me-2">
-        <span class="fw fw-bold" style="font-size: 24px">SBM</span>
+        <span class="fw fw-bold" style="font-size: 24px">BSM</span>
       </span>
     
     </a>

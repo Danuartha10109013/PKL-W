@@ -14,8 +14,8 @@ class KomisiController extends Controller
     public function index(){
         $komisis = KomisiM::orderBy('created_at','desc')->get();
         $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
-
-        return view('pages.penjualan.index',compact('komisis','komisi_customer'));
+        $call= CalculationM::find(1);
+        return view('pages.penjualan.index',compact('komisis','komisi_customer','call'));
     }
 
     public function add(){

@@ -43,10 +43,16 @@
                                             type="text"
                                             name="no_jobcard"
                                             id="jobCardNumberInput"
-                                            class="form-control"
-                                            readonly
+                                            class="form-control" readonly
                                         />
+                                        <small id="jobcardWarning" class="text-danger d-none">
+                                            Komisi untuk no jobcard ini sudah dibuat.
+                                        </small>
                                     </div>
+                                    
+                                    
+                                    
+                                    
                                     <div class="mb-3">
                                         <label for="totalbop" class="form-label">Total BOP</label>
                                         <input
@@ -195,7 +201,7 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="button-subbmit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
@@ -204,66 +210,132 @@
     </div>
 
     {{-- JavaScript to handle AJAX suggestions and detail fetching --}}
-    <script>
-        document.getElementById('jobCardSearch').addEventListener('input', function() {
-            let query = this.value;
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById('jobCardSearch').addEventListener('input', function () {
+        let query = this.value;
 
-            if (query.length > 1) {
-                fetch(`/pegawai/komisi/jobcards/search?query=${query}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        let suggestions = document.getElementById('jobCardSuggestions');
-                        suggestions.innerHTML = ''; // Clear previous suggestions
-
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            data.forEach(item => {
-                                let option = document.createElement('option');
-                                option.value = item.no_jobcard;
-                                suggestions.appendChild(option);
-                            });
-                        }
-                    })
-                    .catch(error => console.error('Error fetching job card data:', error));
-            }
-        });
-
-        document.getElementById('jobCardSearch').addEventListener('change', function() {
-            let selectedJobCard = this.value;
-
-            fetch(`/pegawai/komisi/jobcards/details?no_jobcard=${selectedJobCard}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch job card details');
-                    }
-                    return response.json();
-                })
+        if (query.length > 1) {
+            fetch(`/pegawai/komisi/jobcards/search?query=${query}`)
+                .then(response => response.json())
                 .then(data => {
+                    let suggestions = document.getElementById('jobCardSuggestions');
+                    suggestions.innerHTML = ''; // Kosongkan suggestion sebelumnya
+
                     if (data.error) {
                         alert(data.error);
                     } else {
-                        // Display job card details in form
-                        document.getElementById('jobCardDetailsForm').style.display = 'block';
-                        document.getElementById('jobCardNumberInput').value = data.no_jobcard;
-                        document.getElementById('jobCardDescriptionInput').value = data.date;
-                        document.getElementById('jobCardOtherDetailInput').value = data.customer_name;
-                        document.getElementById('kurs').value = data.kurs;
-                        document.getElementById('no_po').value = data.no_po;
-                        document.getElementById('po_date').value = data.po_date;
-                        document.getElementById('po_received').value = data.po_received;
-                        document.getElementById('totalsp').value = data.totalsp;
-                        document.getElementById('totalbop').value = data.totalbop;
-                        document.getElementById('totalbp').value = data.totalbp;
-                        document.getElementById('no_form').value = data.no_form;
-                        document.getElementById('effective_date').value = data.effective_date;
-                        document.getElementById('no_revisi').value = data.no_revisi;
+                        data.forEach(item => {
+                            let option = document.createElement('option');
+                            option.value = item.no_jobcard;
+                            suggestions.appendChild(option);
+                        });
                     }
                 })
-                .catch(error => {
-                    console.error('Error fetching job card details:', error);
-                    alert("An error occurred while fetching job card details.");
+                .catch(error => console.error('Error fetching job card data:', error));
+        }
+    });
+
+    document.getElementById('jobCardSearch').addEventListener('change', function () {
+        let selectedJobCard = this.value;
+
+        fetch(`/pegawai/komisi/jobcards/details?no_jobcard=${selectedJobCard}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch job card details');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Tampilkan data ke form
+                    document.getElementById('jobCardDetailsForm').style.display = 'block';
+                    document.getElementById('jobCardNumberInput').value = data.no_jobcard;
+                    document.getElementById('jobCardDescriptionInput').value = data.date;
+                    document.getElementById('jobCardOtherDetailInput').value = data.customer_name;
+                    document.getElementById('kurs').value = data.kurs;
+                    document.getElementById('no_po').value = data.no_po;
+                    document.getElementById('po_date').value = data.po_date;
+                    document.getElementById('po_received').value = data.po_received;
+                    document.getElementById('totalsp').value = data.totalsp;
+                    document.getElementById('totalbop').value = data.totalbop;
+                    document.getElementById('totalbp').value = data.totalbp;
+                    document.getElementById('no_form').value = data.no_form;
+                    document.getElementById('effective_date').value = data.effective_date;
+                    document.getElementById('no_revisi').value = data.no_revisi;
+
+                    // 🔁 Cek apakah komisi sudah dibuat untuk jobcard ini
+                    fetch(`/cek-jobcard?no_jobcard=${data.no_jobcard}`)
+                        .then(response => response.json())
+                        .then(check => {
+                            if (check.sudah) {
+                                document.getElementById('jobcardWarning').classList.remove('d-none');
+                                document.getElementById('button-subbmit').disabled = true;
+                            } else {
+                                document.getElementById('jobcardWarning').classList.add('d-none');
+                                document.getElementById('button-subbmit').disabled = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking jobcard:', error);
+                            alert("Gagal memeriksa jobcard.");
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching job card details:', error);
+                alert("Terjadi kesalahan saat mengambil data jobcard.");
+            });
+    });
+</script>
+<div class="card mt-4">
+    <div class="card-header">List Jobcard</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover text-center align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>NO</th>
+                        <th>NO Jobcard</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="jobcard-table-body">
+                    <!-- Data dari JS -->
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/pegawai/komisi/jobcards/load')
+            .then(response => response.json())
+            .then(data => {
+                let tbody = document.getElementById('jobcard-table-body');
+                tbody.innerHTML = '';
+
+                data.forEach((item, index) => {
+                    let row = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.no_jobcard}</td>
+                            <td class="${item.status === 'Sudah dibuat' ? 'text-success' : 'text-danger'}">
+                                ${item.status}
+                            </td>
+                        </tr>`;
+                    tbody.innerHTML += row;
                 });
-        });
-    </script>
+            })
+            .catch(error => {
+                console.error('Gagal memuat data:', error);
+                alert("Gagal mengambil data jobcard.");
+            });
+    });
+</script>
+
 @endsection

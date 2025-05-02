@@ -48,12 +48,12 @@
                             <th>No PO</th>
                             <th>Bottom Of Price</th>
                             <th>Total Sales Price</th>
-                            <th>GP</th>
-                            <th>IT</th>
-                            <th>Sales Engineer</th>
-                            <th>Application Service</th>
-                            <th>Administration</th>
-                            <th>Manager</th>
+                            <th>Gross Price</th>
+                            <th>Incentive Team ({{$call->it *100}})%</th>
+                            <th>Sales Engineer ({{$call->se *100}})%</th>
+                            <th>Application Service ({{$call->as *100}})%</th>
+                            <th>Administration ({{$call->adm *100}})%</th>
+                            <th>Manager ({{$call->adm *100}})%</th>
                             <th>Action</th>
                         </tr>
                     </thead>

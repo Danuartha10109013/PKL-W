@@ -1,6 +1,7 @@
 @extends('layout.admin.main')
 
-@section('title', "Dashboard || SBM {{ Auth::user()->name }}")
+@section('title', 'Dashboard || SBM ' . Auth::user()->name)
+
 
 @section('content')
     <div class="container-fluid">
