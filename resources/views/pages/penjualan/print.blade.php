@@ -109,7 +109,7 @@
         <div class="details-group">
             <span>JO Number: {{$data->no_jo}}</span>
             <span>JO Date: {{$data->jo_date}}</span>
-            <span>Kurs: $ {{ number_format($data->kurs, 0, ',', '.') }}</span>
+            <span>Kurs: Rp. {{ number_format($data->kurs, 0, ',', '.') }}</span>
         </div>
     </div>
 
@@ -137,15 +137,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td colspan="12"></td>
-            </tr>
-            <tr>
-                <td colspan="12"></td>
-            </tr>
-            <tr>
-                <td colspan="12"></td>
-            </tr>
+            
             <tr>
                 @php
                     $totalsp = \App\Models\JobcardM::where('no_jobcard',$data->no_jobcard)->value('totalsp');

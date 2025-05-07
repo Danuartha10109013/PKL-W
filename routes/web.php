@@ -92,5 +92,20 @@ Route::middleware([AutoLogout::class])->group(function () {
         });
        
     });
+
+    Route::group(['prefix' => 'penerima', 'middleware' => ['penerima'], 'as' => 'penerima.'], function () {
+        //Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'penerima'])->name('dashboard'); 
+        Route::prefix('komisi')->group(function () {
+            Route::get('/',[KomisiController::class,'laporan'])->name('komisi');
+            Route::get('/print',[KomisiController::class,'print_laporan'])->name('komisi.print');
+        });
+        Route::prefix('target')->group(function () {
+            Route::get('/',[TargetController::class,'laporan'])->name('target');
+        });
+        Route::prefix('incentive')->group(function () {
+            Route::get('/',[TargetController::class,'incentive'])->name('incentive');
+        });
+    });
     
 });

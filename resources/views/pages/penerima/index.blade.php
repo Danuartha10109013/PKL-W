@@ -24,7 +24,7 @@
 
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Laporan Komisi Penjualan</h5>
+            <h5 class="card-title mb-0">Laporan Incentive</h5>
             <a href="{{ route('direktur.komisi.print', ['from' => request('from'), 'to' => request('to')]) }}" class="btn btn-warning">
                 <i class="bx bxs-printer"></i>
             </a>
@@ -42,7 +42,7 @@
                             <th>NAMA CUSTOMER</th>
                             <th>No. PO</th>
                             <th>No. JO</th>
-                            <th>IT SALES</th>
+                            <th>Sales Enginer</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,6 +72,7 @@
                             <td colspan="6" class="text text-center">TOTAL</td>
                             
                             <td>Rp. {{ number_format($sum, 2, ',', '.') }}</td>
+
                         </tr>
     
                     </tbody>

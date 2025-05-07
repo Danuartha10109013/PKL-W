@@ -186,17 +186,72 @@
                                             required
                                         />
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="no_revisi" class="form-label">Sales Name</label>
-                                        <input
-                                            type="text"
-                                            name="sales_name"
-                                            id="no_revisi"
-                                            class="form-control"
-                                            required
-                                        />
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="no_revisi" class="form-label">Pnerima Incentive Sales Enginer 3 </label>
+                                    
+                                    <select name="sales_name" 
+                                    id="no_revisi"
+                                    class="form-control"
+                                    required>
+                                        <option value="" selected disabled>--Pilih Penerima--</option>
+                                        @php
+                                            $penerima = \App\Models\User::where('role',2)->get()
+                                        @endphp
+                                        @foreach ($penerima as $p)
+                                        <option value="{{$p->id}}">{{$p->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="no_revisi" class="form-label">Pnerima Incentive Aplication Service ?</label>
+                                    
+                                    <select name="sales_name" 
+                                    id="no_revisi"
+                                    class="form-control"
+                                    required>
+                                        <option value="" selected disabled>--Pilih Penerima--</option>
+                                        @php
+                                            $penerima = \App\Models\User::where('role',2)->get()
+                                        @endphp
+                                        @foreach ($penerima as $p)
+                                        <option value="{{$p->id}}">{{$p->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="no_revisi" class="form-label">Pnerima Incentive Administration 3</label>
+                                    
+                                    <select name="sales_name" 
+                                    id="no_revisi"
+                                    class="form-control"
+                                    required>
+                                        <option value="" selected disabled>--Pilih Penerima--</option>
+                                        @php
+                                            $penerima = \App\Models\User::where('role',2)->get()
+                                        @endphp
+                                        @foreach ($penerima as $p)
+                                        <option value="{{$p->id}}">{{$p->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="no_revisi" class="form-label">Pnerima Incentive Manager 1</label>
+                                    
+                                    <select name="sales_name" 
+                                    id="no_revisi"
+                                    class="form-control"
+                                    required>
+                                        <option value="" selected disabled>--Pilih Penerima--</option>
+                                        @php
+                                            $penerima = \App\Models\User::where('role',2)->get()
+                                        @endphp
+                                        @foreach ($penerima as $p)
+                                        <option value="{{$p->id}}">{{$p->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             </div>
                         </div>
 

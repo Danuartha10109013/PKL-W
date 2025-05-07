@@ -102,24 +102,26 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            if (data.success) {
-                                // Tampilkan SweetAlert jika berhasil
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: 'Perubahan berhasil disimpan.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                });
-                            } else {
-                                // Tampilkan SweetAlert jika gagal
-                                Swal.fire({
-                                    title: 'Gagal!',
-                                    text: data.message || 'Terjadi kesalahan saat menyimpan.',
-                                    icon: 'error',
-                                    confirmButtonText: 'Coba Lagi'
-                                });
-                            }
-                        })
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: 'Perubahan berhasil disimpan.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            // Kembalikan nilai asli
+                            cell.textContent = originalContent;
+
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: data.message || 'Terjadi kesalahan saat menyimpan.',
+                                icon: 'error',
+                                confirmButtonText: 'Coba Lagi'
+                            });
+                        }
+                    })
+
                         .catch(() => {
                             Swal.fire({
                                 title: 'Gagal!',

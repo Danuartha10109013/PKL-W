@@ -70,6 +70,24 @@ class TargetController extends Controller
         return view('pages.admin.laporan.target',compact('dataPerBulan', 'prediksiBulanDepan'));
     }
     
-    
-    
+    public function incentive(Request $request){
+        {
+            // Retrieve filter values
+            $from = $request->input('from');
+            $to = $request->input('to');
+        
+            // Filter data based on the provided dates
+            if ($from && $to) {
+                $data = KomisiM::whereBetween('created_at', [$from, $to])->get();
+            } else {
+                $data = KomisiM::all(); // Default to all records if no filter applied
+            }
+        
+            // Calculate the sum
+            $sum = $data->sum('se');
+        
+            // Pass data and filter parameters to the view
+            return view('pages.penerima.index', compact('data', 'sum', 'from', 'to'));
+        }
+}
 }

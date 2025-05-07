@@ -74,8 +74,10 @@
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           @if (Auth::user()->role == 0)
             @include('layout.admin.sidebar')
-          @else
+          @elseif (Auth::user()->role == 1)
             @include('layout.pegawai.sidebar')
+          @elseif (Auth::user()->role == 2)
+            @include('layout.penerima.sidebar')
           @endif
         </aside>
         <!-- / Menu -->

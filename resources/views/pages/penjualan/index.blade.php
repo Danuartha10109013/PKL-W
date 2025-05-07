@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <h5 class="card-title text-primary">Komisi Penjualan</h5>
                             <p class="mb-4">
-                                Add more Incentive sales & Incentive sales (customer)<span class="fw-bold"></span>
+                                Add more Incentive sales <span class="fw-bold"></span>
                             </p>
 
                             <a href="{{ route('pegawai.komisi.add') }}" class="btn btn-sm btn-outline-primary">Tambah Komisi Penjualan</a>
@@ -44,6 +44,7 @@
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
+                            <th>Tanggal</th>
                             <th>No Job Card</th>
                             <th>No PO</th>
                             <th>Bottom Of Price</th>
@@ -59,8 +60,9 @@
                     </thead>
                     <tbody>
                         @foreach($komisis as $komisi)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td><span style="white-space: nowrap;">&nbsp;{{$komisi->created_at->format('d M Y')}}</span></td>
                                 <td>{{ $komisi->no_jobcard }}</td>
                                 <td>{{ $komisi->no_po }}</td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->bop, 0, ',', '.') }}</span></td>

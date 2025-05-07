@@ -36,7 +36,7 @@ class LoginController extends Controller
             } elseif ($user->role == 1) {
                 return redirect()->route('pegawai.dashboard')->with('success', 'Selamat Datang Kembali ' . Auth::user()->name);
             } elseif ($user->role == 2) {
-                return redirect()->route('atasan.dashboard')->with('success', 'Selamat Datang Kembali ' . Auth::user()->name);
+                return redirect()->route('penerima.dashboard')->with('success', 'Selamat Datang Kembali ' . Auth::user()->name);
             }
         } else {
             // Redirect kembali ke halaman login jika gagal

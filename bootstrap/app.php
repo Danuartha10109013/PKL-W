@@ -3,6 +3,7 @@
 use App\Http\Middleware\CheckAdmin;
 use App\Http\Middleware\CheckDirektur;
 use App\Http\Middleware\CheckPegawai;
+use App\Http\Middleware\CheckPenerima;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->appendToGroup('pegawai', [
             CheckPegawai::class,
+            
+        ]);
+        $middleware->appendToGroup('penerima', [
+            CheckPenerima::class,
             
         ]);
     })

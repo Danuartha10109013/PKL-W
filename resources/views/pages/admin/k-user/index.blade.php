@@ -38,7 +38,10 @@
                                 {{ $d->name }}</td>
                             <td>{{ $d->username }}</td>
                             <td>{{ $d->email }}</td>
-                            <td>{{ $d->role == '0' ? 'direktur' : 'User' }}</td>
+                            <td>
+                                {{ $d->role == '0' ? 'Direktur' : ($d->role == '1' ? 'Pegawai' : 'Penerima') }}
+                            </td>
+                            
                             <td>{{ $d->active == '1' ? 'Aktif' : 'Tidak Aktif' }}</td>
                             <td>
                                 <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $d->id }}">
@@ -77,8 +80,9 @@
                                             <div class="mb-3">
                                                 <label for="role" class="form-label">Role</label>
                                                 <select class="form-select" id="role" name="role">
-                                                    <option value="0" {{ $d->role == '0' ? 'selected' : '' }}>direktur</option>
-                                                    <option value="1" {{ $d->role == '1' ? 'selected' : '' }}>User</option>
+                                                    <option value="0" {{ $d->role == '0' ? 'selected' : '' }}>Direktur</option>
+                                                    <option value="1" {{ $d->role == '1' ? 'selected' : '' }}>Pegawai</option>
+                                                    <option value="2" {{ $d->role == '2' ? 'selected' : '' }}>Penerima</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
@@ -169,8 +173,10 @@
                         <div class="mb-3">
                             <label for="newRole" class="form-label">Role</label>
                             <select class="form-select" id="newRole" name="role">
-                                <option value="0">direktur</option>
-                                <option value="1">User</option>
+                                <option value="" selected disabled>--Pilih Role--</option>
+                                <option value="0">Direktur</option>
+                                <option value="1">Pegawai</option>
+                                <option value="2">Penerima</option>
                             </select>
                         </div>
                         <div class="mb-3">
