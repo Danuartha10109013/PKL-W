@@ -42,7 +42,7 @@
                             <th>NAMA CUSTOMER</th>
                             <th>No. PO</th>
                             <th>No. JO</th>
-                            <th>Sales Enginer</th>
+                            <th>{{$division}}</th>
                         </tr>
                     </thead>
                     <tbody>
