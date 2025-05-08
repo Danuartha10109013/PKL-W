@@ -47,6 +47,7 @@
                             <th>Tanggal</th>
                             <th>No Job Card</th>
                             <th>No PO</th>
+                            <th>No IT</th>
                             <th>Bottom Of Price</th>
                             <th>Total Sales Price</th>
                             <th>Gross Price</th>
@@ -65,6 +66,7 @@
                             <td><span style="white-space: nowrap;">&nbsp;{{$komisi->created_at->format('d M Y')}}</span></td>
                                 <td>{{ $komisi->no_jobcard }}</td>
                                 <td>{{ $komisi->no_po }}</td>
+                                <td>{{ $komisi->no_it }}</td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->bop, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->total_sp, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->gp, 0, ',', '.') }}</span></td>
