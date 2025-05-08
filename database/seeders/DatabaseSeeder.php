@@ -33,10 +33,75 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12345'),
         ]);
         User::factory()->create([
-            'name' => 'penerima',
-            'username' => 'penerima',
-            'email' => 'penerima@gmail.com',
+            'name' => 'penerima Sales Enginer',
+            'username' => 'penerima Sales Enginer',
+            'email' => 'penerimase1@gmail.com',
             'role' => '2',
+            'division' => 'Sales Enginer',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        User::factory()->create([
+            'name' => 'penerima Sales Enginer 2',
+            'username' => 'penerima Sales Enginer 2',
+            'email' => 'penerimase2@gmail.com',
+            'role' => '2',
+            'division' => 'Sales Enginer',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        User::factory()->create([
+            'name' => 'penerima Sales Enginer 3',
+            'username' => 'penerima Sales Enginer 3',
+            'email' => 'penerimase3@gmail.com',
+            'role' => '2',
+            'division' => 'Sales Enginer',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        User::factory()->create([
+            'name' => 'penerima Aplication Service',
+            'username' => 'penerima Aplication Service',
+            'email' => 'penerimaap@gmail.com',
+            'role' => '2',
+            'division' => 'Aplication Service',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        
+        User::factory()->create([
+            'name' => 'penerima Administration',
+            'username' => 'penerima Administration',
+            'email' => 'penerimaadm@gmail.com',
+            'role' => '2',
+            'division' => 'Administration',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        User::factory()->create([
+            'name' => 'penerima Administration 2',
+            'username' => 'penerima Administration 2',
+            'email' => 'penerimaadm2@gmail.com',
+            'role' => '2',
+            'division' => 'Administration',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        User::factory()->create([
+            'name' => 'penerima Administration 3',
+            'username' => 'penerima Administration 3',
+            'email' => 'penerimaadm3@gmail.com',
+            'role' => '2',
+            'division' => 'Administration',
+            'active' => '1',
+            'password' => Hash::make('12345'),
+        ]);
+        User::factory()->create([
+            'name' => 'penerima Manager',
+            'username' => 'penerima Manager',
+            'email' => 'penerimamng@gmail.com',
+            'role' => '2',
+            'division' => 'Manager',
             'active' => '1',
             'password' => Hash::make('12345'),
         ]);

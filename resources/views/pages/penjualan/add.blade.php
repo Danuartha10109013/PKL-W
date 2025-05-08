@@ -186,71 +186,120 @@
                                             required
                                         />
                                     </div>
+                                    @php
+                                    $salesEnginer = \App\Models\User::where('role', 2)->where('division', 'Sales Enginer')->get();
+                                    $aplicationService = \App\Models\User::where('role', 2)->where('division', 'Aplication Service')->get();
+                                    $administration = \App\Models\User::where('role', 2)->where('division', 'Administration')->get();
+                                    $manager = \App\Models\User::where('role', 2)->where('division', 'Manager')->get();
+                                @endphp
+                                
                                 <div class="mb-3">
-                                    <label for="no_revisi" class="form-label">Pnerima Incentive Sales Enginer 3 </label>
-                                    
-                                    <select name="sales_name" 
-                                    id="no_revisi"
-                                    class="form-control"
-                                    required>
-                                        <option value="" selected disabled>--Pilih Penerima--</option>
-                                        @php
-                                            $penerima = \App\Models\User::where('role',2)->get()
-                                        @endphp
-                                        @foreach ($penerima as $p)
-                                        <option value="{{$p->id}}">{{$p->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Penerima Incentive Sales Enginer (max 3)</label>
+                                    <div id="wrapper-sales-enginer" class="dynamic-wrapper" 
+                                         data-role="sales_enginer" data-max="3" 
+                                         data-options='@json($salesEnginer->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
+                                        <!-- Initial select -->
+                                        <div class="dynamic-select mb-2">
+                                            <select name="sales_enginer[]" class="form-control" required></select>
+                                        </div>
+                                    </div>
                                 </div>
+                                
                                 <div class="mb-3">
-                                    <label for="no_revisi" class="form-label">Pnerima Incentive Aplication Service ?</label>
-                                    
-                                    <select name="sales_name" 
-                                    id="no_revisi"
-                                    class="form-control"
-                                    required>
-                                        <option value="" selected disabled>--Pilih Penerima--</option>
-                                        @php
-                                            $penerima = \App\Models\User::where('role',2)->get()
-                                        @endphp
-                                        @foreach ($penerima as $p)
-                                        <option value="{{$p->id}}">{{$p->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Penerima Incentive Aplication Service (max 2)</label>
+                                    <div id="wrapper-aplication-service" class="dynamic-wrapper" 
+                                         data-role="aplication_service" data-max="2" 
+                                         data-options='@json($aplicationService->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
+                                        <div class="dynamic-select mb-2">
+                                            <select name="aplication_service[]" class="form-control" required></select>
+                                        </div>
+                                    </div>
                                 </div>
+                                
                                 <div class="mb-3">
-                                    <label for="no_revisi" class="form-label">Pnerima Incentive Administration 3</label>
-                                    
-                                    <select name="sales_name" 
-                                    id="no_revisi"
-                                    class="form-control"
-                                    required>
-                                        <option value="" selected disabled>--Pilih Penerima--</option>
-                                        @php
-                                            $penerima = \App\Models\User::where('role',2)->get()
-                                        @endphp
-                                        @foreach ($penerima as $p)
-                                        <option value="{{$p->id}}">{{$p->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Penerima Incentive Administration (max 3)</label>
+                                    <div id="wrapper-administration" class="dynamic-wrapper" 
+                                         data-role="administration" data-max="3" 
+                                         data-options='@json($administration->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
+                                        <div class="dynamic-select mb-2">
+                                            <select name="administration[]" class="form-control" required></select>
+                                        </div>
+                                    </div>
                                 </div>
+                                
                                 <div class="mb-3">
-                                    <label for="no_revisi" class="form-label">Pnerima Incentive Manager 1</label>
-                                    
-                                    <select name="sales_name" 
-                                    id="no_revisi"
-                                    class="form-control"
-                                    required>
-                                        <option value="" selected disabled>--Pilih Penerima--</option>
-                                        @php
-                                            $penerima = \App\Models\User::where('role',2)->get()
-                                        @endphp
-                                        @foreach ($penerima as $p)
-                                        <option value="{{$p->id}}">{{$p->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Penerima Incentive Manager (max 1)</label>
+                                    <div id="wrapper-manager" class="dynamic-wrapper" 
+                                         data-role="manager" data-max="1" 
+                                         data-options='@json($manager->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
+                                        <div class="dynamic-select mb-2">
+                                            <select name="manager[]" class="form-control" required></select>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', () => {
+                                        const wrappers = document.querySelectorAll('.dynamic-wrapper');
+                                
+                                        wrappers.forEach(wrapper => {
+                                            const role = wrapper.dataset.role;
+                                            const max = parseInt(wrapper.dataset.max);
+                                            const options = JSON.parse(wrapper.dataset.options);
+                                
+                                            const buildSelect = (selectedValues = []) => {
+                                                const div = document.createElement('div');
+                                                div.classList.add('dynamic-select', 'mb-2');
+                                
+                                                const select = document.createElement('select');
+                                                select.name = `${role}[]`;
+                                                select.classList.add('form-control');
+                                                select.required = true;
+                                
+                                                const defaultOpt = document.createElement('option');
+                                                defaultOpt.disabled = true;
+                                                defaultOpt.selected = true;
+                                                defaultOpt.textContent = '-- Pilih Penerima --';
+                                                select.appendChild(defaultOpt);
+                                
+                                                options.forEach(opt => {
+                                                    if (!selectedValues.includes(String(opt.id))) {
+                                                        const option = document.createElement('option');
+                                                        option.value = opt.id;
+                                                        option.textContent = opt.name;
+                                                        select.appendChild(option);
+                                                    }
+                                                });
+                                
+                                                div.appendChild(select);
+                                                return div;
+                                            };
+                                
+                                            // Init first select
+                                            wrapper.innerHTML = '';
+                                            wrapper.appendChild(buildSelect());
+                                
+                                            wrapper.addEventListener('change', (e) => {
+                                                if (!e.target.matches('select')) return;
+                                
+                                                const selects = Array.from(wrapper.querySelectorAll('select'));
+                                                const selectedValues = selects.map(s => s.value).filter(v => v !== "");
+                                
+                                                // Remove all selects after this one
+                                                const changedIndex = selects.indexOf(e.target);
+                                                while (selects.length > changedIndex + 1) {
+                                                    selects[selects.length - 1].parentElement.remove();
+                                                    selects.pop();
+                                                }
+                                
+                                                if (selectedValues.length < max && e.target.value !== "") {
+                                                    wrapper.appendChild(buildSelect(selectedValues));
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+                                
 
                             </div>
                         </div>

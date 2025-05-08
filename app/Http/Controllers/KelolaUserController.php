@@ -23,6 +23,7 @@ class KelolaUserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|integer',
+            'division' => 'nullable|string',
             'active' => 'required|integer',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Nullable image validation
         ]);
@@ -34,6 +35,7 @@ class KelolaUserController extends Controller
         $user->email = $validatedData['email'];
         $user->password = Hash::make($validatedData['password']);
         $user->role = $validatedData['role'];
+        $user->division = $validatedData['division'];
         $user->active = $validatedData['active'];
 
         // Handle profile image upload

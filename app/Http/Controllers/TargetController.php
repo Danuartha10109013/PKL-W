@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KomisiM;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TargetController extends Controller
@@ -71,23 +72,86 @@ class TargetController extends Controller
     }
     
     public function incentive(Request $request){
-        {
+        
             // Retrieve filter values
             $from = $request->input('from');
             $to = $request->input('to');
-        
-            // Filter data based on the provided dates
+
+            $user = Auth::user();
+            $userId = (string) Auth::id();
+            $division = $user->division;
+
+            // Mulai query dasar
+            $query = KomisiM::query();
+
+            // Tambahkan filter tanggal jika ada
             if ($from && $to) {
-                $data = KomisiM::whereBetween('created_at', [$from, $to])->get();
-            } else {
-                $data = KomisiM::all(); // Default to all records if no filter applied
+                $query->whereBetween('created_at', [$from, $to]);
             }
+
+            // Filter berdasarkan division dan userId
+            switch ($division) {
+                case 'Sales Enginer':
+                    $query->whereJsonContains('penerimase', $userId);
+                    $data = $query->whereJsonContains('penerimase', $userId)->get();
+                    $sum = 0;
+
+                    foreach ($data as $item) {
+                        $penerimaCount = count(json_decode($item->penerimase, true));
+                        $in = ($item->se ?? 0) / max(1, $penerimaCount);
+                        // dd($se);
+                        $sum += $in;
+                    }
+
+                    break;
+                case 'Aplication Service':
+                    $query->whereJsonContains('penerimaap', $userId);
+                    $data = $query->whereJsonContains('penerimaap', $userId)->get();
+                    $sum = 0;
+
+                    foreach ($data as $item) {
+                        $penerimaCount = count(json_decode($item->penerimaap, true));
+                        $in = ($item->as ?? 0) / max(1, $penerimaCount);
+                        // dd($se);
+                        $sum += $in;
+                    }
+                    break;
+                case 'Administration':
+                    $query->whereJsonContains('penerimaadm', $userId);
+                    $data = $query->whereJsonContains('penerimaadm', $userId)->get();
+                    $sum = 0;
+
+                    foreach ($data as $item) {
+                        $penerimaCount = count(json_decode($item->penerimaadm, true));
+                        $in = ($item->adm ?? 0) / max(1, $penerimaCount);
+                        // dd($se);
+                        $sum += $in;
+                    }
+                    break;
+                case 'Manager':
+                    $query->whereJsonContains('penerimamng', $userId);
+                    $data = $query->whereJsonContains('penerimamng', $userId)->get();
+                    $sum = 0;
+                    
+                    foreach ($data as $item) {
+                        $penerimaCount = count(json_decode($item->penerimamng, true));
+                        $in = ($item->mng ?? 0) / max(1, $penerimaCount);
+                        // dd($penerimaCount);
+                        $sum += $in;
+                    }
+                    break;
+                default:
+                    $data = collect(); // Division tidak cocok
+            }
+
+$data = $query->get();
+
+// dd($data); // akan berisi Collection
+
         
             // Calculate the sum
-            $sum = $data->sum('se');
         
             // Pass data and filter parameters to the view
-            return view('pages.penerima.index', compact('data', 'sum', 'from', 'to'));
+            return view('pages.penerima.index', compact('data', 'sum', 'from', 'to', 'division','penerimaCount'));
         }
-}
 }

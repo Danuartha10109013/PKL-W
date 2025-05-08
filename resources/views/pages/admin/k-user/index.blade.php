@@ -40,6 +40,9 @@
                             <td>{{ $d->email }}</td>
                             <td>
                                 {{ $d->role == '0' ? 'Direktur' : ($d->role == '1' ? 'Pegawai' : 'Penerima') }}
+                                @if ($d->role == '2')
+                                    {{$d->division}}
+                                @endif
                             </td>
                             
                             <td>{{ $d->active == '1' ? 'Aktif' : 'Tidak Aktif' }}</td>
@@ -172,13 +175,39 @@
                         </div>
                         <div class="mb-3">
                             <label for="newRole" class="form-label">Role</label>
-                            <select class="form-select" id="newRole" name="role">
+                            <select class="form-select" id="roleSelect" name="role">
                                 <option value="" selected disabled>--Pilih Role--</option>
                                 <option value="0">Direktur</option>
                                 <option value="1">Pegawai</option>
                                 <option value="2">Penerima</option>
                             </select>
                         </div>
+                        
+                        <div class="mb-3" id="divisionGroup" style="display: none;">
+                            <label for="divisionSelect" class="form-label">Division</label>
+                            <select class="form-select" id="divisionSelect" name="division">
+                                <option value="" selected disabled>--Pilih Divisi--</option>
+                                <option value="Sales Enginer">Sales Enginer</option>
+                                <option value="Aplication Service">Aplication Service</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Manager">Manager</option>
+                            </select>
+                        </div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const roleSelect = document.getElementById("roleSelect");
+                                const divisionGroup = document.getElementById("divisionGroup");
+                        
+                                roleSelect.addEventListener("change", function () {
+                                    if (this.value === "2") {
+                                        divisionGroup.style.display = "block";
+                                    } else {
+                                        divisionGroup.style.display = "none";
+                                    }
+                                });
+                            });
+                        </script>
+                                                
                         <div class="mb-3">
                             <label for="newActive" class="form-label">Status</label>
                             <select class="form-select" id="newActive" name="active">

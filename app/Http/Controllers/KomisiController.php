@@ -40,6 +40,10 @@ class KomisiController extends Controller
             'no_form' => 'required|string|max:255',
             'effective_date' => 'required|date',
             'no_revisi' => 'required|string|max:255',
+            'sales_enginer' => 'array|max:3',
+            'aplication_service' => 'array|max:2',
+            'administration' => 'array|max:3',
+            'manager' => 'array|max:1',
         ]);
 
         $lastno = KomisiM::whereDate('created_at', now()->toDateString())->max('no');
@@ -88,6 +92,10 @@ class KomisiController extends Controller
         $komisi->no_jo = $no_jo;
         $komisi->jo_date = now()->toDateString();
         $komisi->kurs = $request->kurs;
+        $komisi->penerimase = json_encode($request->sales_enginer);
+        $komisi->penerimaap = json_encode($request->aplication_service);
+        $komisi->penerimaadm = json_encode($request->administration);
+        $komisi->penerimamng = json_encode($request->manager);
         
         // Save the Komisi Penjualan entry
         $komisi->save();

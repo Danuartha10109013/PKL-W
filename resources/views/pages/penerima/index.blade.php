@@ -24,7 +24,7 @@
 
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Laporan Incentive</h5>
+            <h5 class="card-title mb-0">Laporan Incentive {{Auth::user()->division}}</h5>
             <a href="{{ route('direktur.komisi.print', ['from' => request('from'), 'to' => request('to')]) }}" class="btn btn-warning">
                 <i class="bx bxs-printer"></i>
             </a>
@@ -56,7 +56,17 @@
                             <td>{{ $d->customer_name }}</td>
                             <td>{{ $d->no_po }}</td>
                             <td>{{ $d->no_jo }}</td>
-                            <td>Rp. {{ number_format($d->se, 2, ',', '.') }}</td>
+                            <td>
+                               @if (Auth::user()->division == 'Sales Enginer')
+                               Rp. {{ number_format($d->se / $penerimaCount, 2, ',', '.') }}</td>
+                               @elseif (Auth::user()->division == 'Aplication Service')
+                               Rp. {{ number_format($d->as / $penerimaCount, 2, ',', '.') }}</td>
+                               @elseif (Auth::user()->division == 'Administration')
+                               Rp. {{ number_format($d->adm / $penerimaCount, 2, ',', '.') }}</td>
+                               @elseif (Auth::user()->division == 'Manager')
+                               Rp. {{ number_format($d->mng / $penerimaCount, 2, ',', '.') }}</td>
+                                   
+                               @endif
                             
                         </tr>
                         @endforeach
