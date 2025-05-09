@@ -76,13 +76,12 @@
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->adm, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->mng, 0, ',', '.') }}</span></td>
                                 <td class="d-flex justify-content-center">
-                                    <button class="btn btn-success btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal1{{ $komisi->id }}"><i class="bx bxs-edit-alt"></i></button>
+                                    {{-- <button class="btn btn-success btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal1{{ $komisi->id }}"><i class="bx bxs-edit-alt"></i></button> --}}
                                     <a href="{{route('pegawai.komisi.print',$komisi->id)}}" class="btn btn-warning"><i class="bx bxs-printer"></i></a>
                                     <button class="btn btn-danger btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $komisi->id }}"><i class="bx bxs-trash"></i></button>
                                 </td>
                             </tr>
-                            
-                            <!-- Edit Modal -->
+                                                        {{-- <!-- Edit Modal -->
                             <div class="modal fade" id="editModal1{{ $komisi->id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -110,6 +109,7 @@
                                     </div>
                                 </div>
                             </div>
+ --}}
 
                             <!-- Print Modal -->
                             <div class="modal fade" id="printModal{{ $komisi->id }}" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">

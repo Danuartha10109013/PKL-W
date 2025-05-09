@@ -35,6 +35,13 @@
         <div data-i18n="Analytics">Penentuan Target</div>
       </a>
     </li>
+
+    <li class="menu-item {{ request()->routeIs('pegawai.penerima.incentive') ? 'active' : '' }}">
+      <a href="{{ route('pegawai.penerima.incentive') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-target-lock"></i>
+        <div data-i18n="Analytics">Laporan Penerima Incentive</div>
+      </a>
+    </li>
     
 
     <!-- Layouts -->

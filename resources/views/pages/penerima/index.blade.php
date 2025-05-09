@@ -43,49 +43,139 @@
                             <th>No. PO</th>
                             <th>No. JO</th>
                             <th>{{$division}}</th>
+                            <td>STATUS</td>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($data as $d)
-                        <tr>
+                    <tbody id="incentive-table-body">
+                    @foreach ($data as $index => $d)
+                        @php
+                            $divisionMap = [
+                                'Sales Enginer' => 'penerimase',
+                                'Aplication Service' => 'penerimaas',
+                                'Administration' => 'penerimaadm',
+                                'Manager' => 'penerimamng',
+                            ];
+
+                            $status = 'Tidak Ditemukan';
+                            $bayar = 'Belum Dibayar';
+                            $userDivision = Auth::user()->division;
+                            $userId = Auth::user()->id;
+
+                            if (isset($divisionMap[$userDivision])) {
+                                $field = $divisionMap[$userDivision];
+                                $dataJson = json_decode($d->$field ?? '[]', true);
+
+                                if (is_array($dataJson)) {
+                                    foreach ($dataJson as $item) {
+                                        if (isset($item['id'], $item['status']) && $item['id'] == $userId) {
+                                            $status = $item['status'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
+                                            $bayar = $item['dibayar'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            $amount = match($userDivision) {
+                                'Sales Enginer' => $d->se,
+                                'Aplication Service' => $d->as,
+                                'Administration' => $d->adm,
+                                'Manager' => $d->mng,
+                                default => 0,
+                            };
+
+                            $formattedAmount = 'Rp. ' . number_format($amount / $penerimaCount, 2, ',', '.');
+                            $showButtons = $index === 0 ? '' : 'd-none';
+                        @endphp
+
+                        <tr class="data-row" data-index="{{ $index }}" data-status="{{ $status }}">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $d->created_at->format('d M Y') }}</td>
                             <td>
-                                <img src="{{asset('storage/'.$d->profile)}}" width="35px" alt="">
-                                {{ $d->no_it }}</td>
+                                <img src="{{ asset('storage/' . $d->profile) }}" width="35px" alt="">
+                                {{ $d->no_it }}
+                            </td>
                             <td>{{ $d->customer_name }}</td>
                             <td>{{ $d->no_po }}</td>
                             <td>{{ $d->no_jo }}</td>
                             <td>
-                               @if (Auth::user()->division == 'Sales Enginer')
-                               Rp. {{ number_format($d->se / $penerimaCount, 2, ',', '.') }}</td>
-                               @elseif (Auth::user()->division == 'Aplication Service')
-                               Rp. {{ number_format($d->as / $penerimaCount, 2, ',', '.') }}</td>
-                               @elseif (Auth::user()->division == 'Administration')
-                               Rp. {{ number_format($d->adm / $penerimaCount, 2, ',', '.') }}</td>
-                               @elseif (Auth::user()->division == 'Manager')
-                               Rp. {{ number_format($d->mng / $penerimaCount, 2, ',', '.') }}</td>
-                                   
-                               @endif
-                            
-                        </tr>
-                        @endforeach
+                                {{ $formattedAmount }}
+                                <div class="status-cell mt-2">
+                                    @if ($status === 'Sudah Dibayar')
+                                        <p class="text-success text-center">{{ $status }}</p>
+                                    @elseif ($status === 'Belum Dibayar')
+                                        <strong>Status:</strong> {{ $bayar }} <br>
+                                        <a href="#" class="btn btn-danger mb-2 mt-2 {{ $showButtons }}" data-bs-toggle="modal" data-bs-target="#catatanModal{{ $d->id }}">
+                                            Kirim Catatan
+                                        </a>
 
-                        <tr>
-                            <td colspan="7"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="7"></td>
+                                        <div class="modal fade {{ $showButtons }}" id="catatanModal{{ $d->id }}" tabindex="-1" aria-labelledby="catatanModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form action="{{ route('penerima.incentive.catatan', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" method="POST">
+                                                    @csrf
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="catatanModalLabel">Kirim Catatan</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="catatan" class="form-label">Catatan</label>
+                                                                <textarea class="form-control" name="catatan" id="catatan" rows="4" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Kirim</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
 
+                                        @if ($bayar === 'Sudah Dibayar')
+                                            <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a>
+                                        @endif
+                                    @else
+                                        <p class="text-muted text-center">{{ $status }}</p>
+                                    @endif
+                                </div>
+                            </td>
                         </tr>
-                        <tr>
-                            <td colspan="6" class="text text-center">TOTAL</td>
-                            
-                            <td>Rp. {{ number_format($sum, 2, ',', '.') }}</td>
+                    @endforeach
 
-                        </tr>
-    
-                    </tbody>
+                    <tr><td colspan="7"></td></tr>
+                    <tr><td colspan="7"></td></tr>
+                    <tr>
+                        <td colspan="6" class="text text-center">TOTAL</td>
+                        <td>Rp. {{ number_format($sum, 2, ',', '.') }}</td>
+                    </tr>
+                </tbody>
+
+                {{-- JavaScript untuk menampilkan tombol pada baris selanjutnya jika sebelumnya sudah dibayar --}}
+                <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const rows = document.querySelectorAll('.data-row');
+                    if (rows.length < 2) return;
+
+                    const firstRow = rows[0];
+                    const firstStatus = firstRow.getAttribute('data-status');
+
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        const cell = row.querySelector('.status-cell');
+
+                        if (firstStatus !== 'Sudah Dibayar') {
+                            cell.innerHTML = '<p class="text-warning text-center">Menunggu konfirmasi data sebelumnya</p>';
+                        } else {
+                            const hiddenButtons = cell.querySelectorAll('.d-none');
+                            hiddenButtons.forEach(btn => btn.classList.remove('d-none'));
+                        }
+                    }
+                });
+                </script>
+
+
                 </table>
             </div>
 

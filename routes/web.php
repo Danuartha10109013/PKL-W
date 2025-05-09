@@ -90,6 +90,11 @@ Route::middleware([AutoLogout::class])->group(function () {
         Route::prefix('target')->group(function () {
             Route::get('/',[TargetController::class,'index'])->name('target');
         });
+        Route::prefix('laporan')->group(function () {
+            Route::get('/penerima',[TargetController::class,'penrimaIncentive'])->name('penerima.incentive');
+            Route::post('/dibayar/{id}/{inId}', [KomisiController::class, 'dibayar'])->name('pegawai.incentive.dibayar');
+
+        });
        
     });
 
@@ -105,6 +110,8 @@ Route::middleware([AutoLogout::class])->group(function () {
         });
         Route::prefix('incentive')->group(function () {
             Route::get('/',[TargetController::class,'incentive'])->name('incentive');
+            Route::get('/konfirmasi/{id}/{inId}',[TargetController::class,'confirmation'])->name('incentive.confirmation');
+            Route::post('/catatan/{id}/{inId}',[TargetController::class,'catatan'])->name('incentive.catatan');
         });
     });
     

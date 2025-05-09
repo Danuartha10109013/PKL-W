@@ -6,6 +6,7 @@ use App\Models\CalculationM;
 use App\Models\KomisiCostumerM;
 use App\Models\KomisiM;
 use App\Models\KomisiPenjualanM;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -92,10 +93,23 @@ class KomisiController extends Controller
         $komisi->no_jo = $no_jo;
         $komisi->jo_date = now()->toDateString();
         $komisi->kurs = $request->kurs;
-        $komisi->penerimase = json_encode($request->sales_enginer);
-        $komisi->penerimaap = json_encode($request->aplication_service);
-        $komisi->penerimaadm = json_encode($request->administration);
-        $komisi->penerimamng = json_encode($request->manager);
+        $komisi->penerimase = json_encode(collect($request->sales_enginer)->map(function ($id) {
+            return ['id' => $id, 'status' => '0', 'catatan' => '', 'dibayar' => '0'];
+        }));
+        
+        $komisi->penerimaap = json_encode(collect($request->aplication_service)->map(function ($id) {
+            return ['id' => $id, 'status' => '0', 'catatan' => '', 'dibayar' => '0'];
+        }));
+        
+        $komisi->penerimaadm = json_encode(collect($request->administration)->map(function ($id) {
+            return ['id' => $id, 'status' => '0', 'catatan' => '', 'dibayar' => '0'];
+        }));
+        
+        $komisi->penerimamng = json_encode(collect($request->manager)->map(function ($id) {
+            return ['id' => $id, 'status' => '0', 'catatan' => '', 'dibayar' => '0'];
+        }));
+        
+        
         
         // Save the Komisi Penjualan entry
         $komisi->save();
@@ -201,5 +215,38 @@ class KomisiController extends Controller
         return view('pages.admin.laporan.print', compact('data', 'sum', 'from', 'to'));
     }
     
-   
+public function dibayar($id, $inId)
+{
+    $komisi = KomisiM::findOrFail($inId);
+
+    // Tentukan field sesuai division user
+    $divisionMap = [
+        'Sales Enginer' => 'penerimase',
+        'Aplication Service' => 'penerimaas',
+        'Administration' => 'penerimaadm',
+        'Manager' => 'penerimamng',
+    ];
+
+    $user = User::findOrFail($id);
+    $divisionField = $divisionMap[$user->division] ?? null;
+    // dd($divisionField);
+    if ($divisionField && $komisi->$divisionField) {
+        $data = json_decode($komisi->$divisionField, true);
+
+        if (is_array($data)) {
+            foreach ($data as &$item) {
+                if (isset($item['id']) && $item['id'] == $id) {
+                    $item['dibayar'] = 1; // pastikan disimpan sebagai integer
+                    break;
+                }
+            }
+
+            $komisi->$divisionField = json_encode($data);
+            $komisi->save();
+        }
+    }
+
+    return redirect()->back()->with('success', 'Status pembayaran telah dikonfirmasi.');
+}
+
 }

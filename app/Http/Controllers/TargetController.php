@@ -3,12 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\KomisiM;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TargetController extends Controller
 {
+    public function penrimaIncentive(){
+        $data = KomisiM::all();
+        $sum = 0;
+        return view('pages.penjualan.incentive',compact('data','sum'));
+    }
+
     public function index()
     {
         $dataPerBulan = KomisiM::select(
@@ -90,61 +97,63 @@ class TargetController extends Controller
             }
 
             // Filter berdasarkan division dan userId
+            $sum = 0;
+
             switch ($division) {
                 case 'Sales Enginer':
-                    $query->whereJsonContains('penerimase', $userId);
-                    $data = $query->whereJsonContains('penerimase', $userId)->get();
-                    $sum = 0;
-
+                    $data = $query->get(); // Ambil semua data dulu
                     foreach ($data as $item) {
-                        $penerimaCount = count(json_decode($item->penerimase, true));
-                        $in = ($item->se ?? 0) / max(1, $penerimaCount);
-                        // dd($se);
-                        $sum += $in;
+                        $penerima = json_decode($item->penerimase, true); // array of ['id' => ..., 'status' => ...]
+                        if (collect($penerima)->contains('id', (string) $userId)) {
+                            $penerimaCount = count($penerima);
+                            $in = ($item->se ?? 0) / max(1, $penerimaCount);
+                            $sum += $in;
+                        }
                     }
-
                     break;
+
                 case 'Aplication Service':
-                    $query->whereJsonContains('penerimaap', $userId);
-                    $data = $query->whereJsonContains('penerimaap', $userId)->get();
-                    $sum = 0;
-
+                    $data = $query->get();
                     foreach ($data as $item) {
-                        $penerimaCount = count(json_decode($item->penerimaap, true));
-                        $in = ($item->as ?? 0) / max(1, $penerimaCount);
-                        // dd($se);
-                        $sum += $in;
+                        $penerima = json_decode($item->penerimaap, true);
+                        if (collect($penerima)->contains('id', (string) $userId)) {
+                            $penerimaCount = count($penerima);
+                            $in = ($item->as ?? 0) / max(1, $penerimaCount);
+                            $sum += $in;
+                        }
                     }
                     break;
+
                 case 'Administration':
-                    $query->whereJsonContains('penerimaadm', $userId);
-                    $data = $query->whereJsonContains('penerimaadm', $userId)->get();
-                    $sum = 0;
+                    $data = $query->get();
+                    foreach ($data as $item) {
+                        $penerima = json_decode($item->penerimaadm, true);
+                        if (collect($penerima)->contains('id', (string) $userId)) {
+                            $penerimaCount = count($penerima);
+                            $in = ($item->adm ?? 0) / max(1, $penerimaCount);
+                            $sum += $in;
+                        }
+                    }
+                    break;
 
-                    foreach ($data as $item) {
-                        $penerimaCount = count(json_decode($item->penerimaadm, true));
-                        $in = ($item->adm ?? 0) / max(1, $penerimaCount);
-                        // dd($se);
-                        $sum += $in;
-                    }
-                    break;
                 case 'Manager':
-                    $query->whereJsonContains('penerimamng', $userId);
-                    $data = $query->whereJsonContains('penerimamng', $userId)->get();
-                    $sum = 0;
-                    
+                    $data = $query->get();
                     foreach ($data as $item) {
-                        $penerimaCount = count(json_decode($item->penerimamng, true));
-                        $in = ($item->mng ?? 0) / max(1, $penerimaCount);
-                        // dd($penerimaCount);
-                        $sum += $in;
+                        $penerima = json_decode($item->penerimamng, true);
+                        if (collect($penerima)->contains('id', (string) $userId)) {
+                            $penerimaCount = count($penerima);
+                            $in = ($item->mng ?? 0) / max(1, $penerimaCount);
+                            $sum += $in;
+                        }
                     }
                     break;
+
                 default:
-                    $data = collect(); // Division tidak cocok
+                    $data = collect(); // Kosongkan jika division tidak cocok
             }
 
-$data = $query->get();
+
+            $data = $query->get();
 
 // dd($data); // akan berisi Collection
 
@@ -154,4 +163,83 @@ $data = $query->get();
             // Pass data and filter parameters to the view
             return view('pages.penerima.index', compact('data', 'sum', 'from', 'to', 'division','penerimaCount'));
         }
+
+        public function confirmation($id, $inId)
+{
+    $komisi = KomisiM::findOrFail($inId);
+    $userId = (string) $id; // pastikan dalam bentuk string karena di JSON tersimpan sebagai string
+
+    // Daftar kolom JSON yang mungkin menyimpan data user
+    $fields = ['penerimase', 'penerimaap', 'penerimaadm', 'penerimamng'];
+
+    foreach ($fields as $field) {
+        $data = json_decode($komisi->$field, true);
+
+        if (is_array($data)) {
+            $updated = false;
+
+            foreach ($data as &$item) {
+                if (isset($item['id']) && $item['id'] == $userId) {
+                    $item['status'] = 1;
+                    $updated = true;
+                    break;
+                }
+            }
+
+            if ($updated) {
+                $komisi->$field = json_encode($data);
+                break; // berhenti setelah satu kolom ditemukan dan diubah
+            }
+        }
+    }
+
+    $komisi->save();
+
+    return redirect()->back()->with('success', 'Status berhasil dikonfirmasi.');
+}
+
+public function catatan(Request $request, $id, $inId)
+{
+    $komisi = KomisiM::findOrFail($inId);
+    $user = User::findOrFail($id);
+    $division = $user->division;
+    $field = null;
+
+    // Tentukan field berdasarkan division
+    switch ($division) {
+        case 'Sales Enginer':
+            $field = 'penerimase';
+            break;
+        case 'Aplication Service':
+            $field = 'penerimaap';
+            break;
+        case 'Administration':
+            $field = 'penerimaadm';
+            break;
+        case 'Manager':
+            $field = 'penerimamng';
+            break;
+        default:
+            return redirect()->back()->with('error', 'Divisi tidak dikenali.');
+    }
+
+    // Decode JSON dari field yang sesuai
+    $penerima = json_decode($komisi->$field, true);
+
+    // Ubah nilai catatan hanya untuk user yang sesuai
+    foreach ($penerima as &$item) {
+        if ($item['id'] == $id) {
+            $item['catatan'] = $request->catatan;
+            break;
+        }
+    }
+
+    // Encode kembali dan simpan
+    $komisi->$field = json_encode($penerima);
+    $komisi->save();
+
+    return redirect()->back()->with('success', 'Catatan berhasil dikirim.');
+}
+
+
 }
