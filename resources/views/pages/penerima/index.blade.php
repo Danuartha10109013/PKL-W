@@ -43,7 +43,6 @@
                             <th>No. PO</th>
                             <th>No. JO</th>
                             <th>{{$division}}</th>
-                            <td>STATUS</td>
                         </tr>
                     </thead>
                     <tbody id="incentive-table-body">
