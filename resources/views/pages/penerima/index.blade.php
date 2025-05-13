@@ -6,30 +6,104 @@
 
 @section('content')
 <div class="mb-3">
-    <form action="{{ route('direktur.komisi') }}" method="GET" class="d-flex align-items-center">
-        <div class="me-2">
-            <label for="from" class="form-label">Dari Tanggal</label>
-            <input type="date" name="from" id="from" class="form-control" value="{{ request('from') }}">
-        </div>
-        <div class="me-2">
-            <label for="to" class="form-label">Sampai Tanggal</label>
-            <input type="date" name="to" id="to" class="form-control" value="{{ request('to') }}">
-        </div>
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
-    </form>
+    <form id="filter-form" class="d-flex align-items-center mb-3">
+    <div class="me-2">
+        <label for="from" class="form-label">Dari Tanggal</label>
+        <input type="date" name="from" id="from" class="form-control">
+    </div>
+    <div class="me-2">
+        <label for="to" class="form-label">Sampai Tanggal</label>
+        <input type="date" name="to" id="to" class="form-control">
+    </div>
+    <div class="mt-4">
+        <button type="button" class="btn btn-primary" onclick="filterTable()">Filter</button>
+        <button type="button" class="btn btn-secondary ms-2" onclick="resetFilter()">Reset</button>
+    </div>
+</form>
 </div>
 
-
-    <div class="card mt-3">
+<div id="printable-area">
+    <div class="card mt-3 shadow">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Laporan Incentive {{Auth::user()->division}}</h5>
-            <a href="{{ route('direktur.komisi.print', ['from' => request('from'), 'to' => request('to')]) }}" class="btn btn-warning">
-                <i class="bx bxs-printer"></i>
-            </a>
-            
+            <h5 class="card-title mb-0">Laporan Incentive {{ Auth::user()->division }}</h5>
+
+            <!-- Tombol Cetak -->
+            <button class="btn btn-warning d-print-none" onclick="window.print()">
+                <i class="bx bxs-printer"></i> Cetak
+            </button>
         </div>
+
+
+
+<!-- CSS PRINT -->
+<style>
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #printable-area, #printable-area * {
+        visibility: visible;
+    }
+
+    #printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background-color: #fff;
+        padding: 20px;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    /* Elemen yang tidak ingin dicetak */
+    .d-print-none,
+    nav,
+    footer,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+
+    /* Hilangkan efek visual tidak penting */
+    .card, .table, .border, .shadow {
+        box-shadow: none !important;
+        background-color: white !important;
+        border-color: #000 !important;
+    }
+
+    * {
+        color: #000 !important;
+    }
+ table {
+        width: 100%;
+        border-collapse: collapse !important;
+        table-layout: fixed;
+    }
+
+    th, td {
+        border: 1px solid #000 !important;
+        padding: 6px !important;
+        font-size: 11pt !important;
+        vertical-align: top !important;
+        word-wrap: break-word;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2 !important;
+        font-weight: bold;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+}
+
+</style>
+
+
         
         <div class="container">
             <div class="table-responsive">
@@ -89,7 +163,7 @@
 
                         <tr class="data-row" data-index="{{ $index }}" data-status="{{ $status }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $d->created_at->format('d M Y') }}</td>
+                            <td class="tanggal">{{ $d->created_at->format('d M Y') }}</td>
                             <td>
                                 <img src="{{ asset('storage/' . $d->profile) }}" width="35px" alt="">
                                 {{ $d->no_it }}
@@ -184,5 +258,31 @@
 
         </div>
     </div>
+</div>
+<script>
+    function filterTable() {
+        const fromDate = new Date(document.getElementById('from').value);
+        const toDate = new Date(document.getElementById('to').value);
+        const rows = document.querySelectorAll('#incentive-table-body tr');
+
+        rows.forEach(row => {
+            const tanggalCell = row.querySelector('.tanggal');
+            if (!tanggalCell) return;
+
+            const rowDate = new Date(tanggalCell.textContent.trim());
+            const show =
+                (!isNaN(fromDate.getTime()) ? rowDate >= fromDate : true) &&
+                (!isNaN(toDate.getTime()) ? rowDate <= toDate : true);
+
+            row.style.display = show ? '' : 'none';
+        });
+    }
+
+    function resetFilter() {
+        document.getElementById('from').value = '';
+        document.getElementById('to').value = '';
+        filterTable();
+    }
+</script>
 
 @endsection
