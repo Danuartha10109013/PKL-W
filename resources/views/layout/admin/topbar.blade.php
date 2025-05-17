@@ -8,7 +8,7 @@
     <!-- Search -->
     <div class="navbar-nav align-items-center">
       <div class="nav-item d-flex align-items-center">
-        PT. Sahabat Makmur 
+        PT. BERSAMA SAHABAT MAKMUR 
       </div>
     </div>
     <!-- /Search -->

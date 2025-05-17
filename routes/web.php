@@ -71,7 +71,7 @@ Route::middleware([AutoLogout::class])->group(function () {
 
         });
         Route::prefix('incentive')->group(function () {
-            Route::get('/penerima',[TargetController::class,'penrimaIncentive'])->name('incentive');
+            Route::get('/penerima',[TargetController::class,'penrimaIncentiveDirektur'])->name('incentive');
             // Route::post('/dibayar/{id}/{inId}', [KomisiController::class, 'dibayar'])->name('pegawai.incentive.dibayar');
 
         });

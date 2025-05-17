@@ -17,7 +17,6 @@
     </div>
     <div class="mt-4">
         <button type="button" class="btn btn-primary" onclick="filterTable()">Filter</button>
-        <button type="button" class="btn btn-secondary ms-2" onclick="resetFilter()">Reset</button>
     </div>
 </form>
 </div>
@@ -261,22 +260,35 @@
 </div>
 <script>
     function filterTable() {
-        const fromDate = new Date(document.getElementById('from').value);
-        const toDate = new Date(document.getElementById('to').value);
-        const rows = document.querySelectorAll('#incentive-table-body tr');
+    const fromDateInput = document.getElementById('from').value;
+    const toDateInput = document.getElementById('to').value;
+    const rows = document.querySelectorAll('#incentive-table-body tr');
 
-        rows.forEach(row => {
-            const tanggalCell = row.querySelector('.tanggal');
-            if (!tanggalCell) return;
-
-            const rowDate = new Date(tanggalCell.textContent.trim());
-            const show =
-                (!isNaN(fromDate.getTime()) ? rowDate >= fromDate : true) &&
-                (!isNaN(toDate.getTime()) ? rowDate <= toDate : true);
-
-            row.style.display = show ? '' : 'none';
-        });
+    if (!fromDateInput && !toDateInput) {
+        rows.forEach(row => row.style.display = '');
+        return;
     }
+
+    // Convert input dates to yyyy-mm-dd format
+    const fromDate = fromDateInput ? new Date(fromDateInput).toISOString().split('T')[0] : null;
+    const toDate = toDateInput ? new Date(toDateInput).toISOString().split('T')[0] : null;
+
+    rows.forEach(row => {
+        const tanggalCell = row.querySelector('.tanggal');
+        if (!tanggalCell) return;
+
+        // Format tanggal dari row ke yyyy-mm-dd
+        const rowDate = new Date(tanggalCell.textContent.trim());
+        const formattedRowDate = rowDate.toISOString().split('T')[0];
+
+        let show = true;
+        if (fromDate && formattedRowDate < fromDate) show = false;
+        if (toDate && formattedRowDate > toDate) show = false;
+
+        row.style.display = show ? '' : 'none';
+    });
+}
+
 
     function resetFilter() {
         document.getElementById('from').value = '';

@@ -56,7 +56,7 @@
                             <td>{{ $d->customer_name }}</td>
                             <td>{{ $d->no_po }}</td>
                             <td>{{ $d->no_jo }}</td>
-                            <td>Rp. {{ number_format($d->se, 2, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($d->it, 2, ',', '.') }}</td>
                             
                         </tr>
                         @endforeach

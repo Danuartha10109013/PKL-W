@@ -17,7 +17,7 @@
     </div>
     <div class="mt-4">
         <button type="button" class="btn btn-primary" onclick="filterTable()">Filter</button>
-        <button type="button" class="btn btn-secondary ms-2" onclick="resetFilter()">Reset</button>
+        {{-- <button type="button" class="btn btn-secondary ms-2" onclick="resetFilter()">Reset</button> --}}
     </div>
 </form>
 </div>
@@ -38,12 +38,19 @@
 <!-- CSS PRINT -->
 <style>
 @media print {
+    /* Atur ukuran halaman menjadi A4 landscape */
+    @page {
+        size: A4 landscape;
+        margin: 20mm;
+    }
+
+    /* Sembunyikan semua elemen kecuali yang ingin dicetak */
     body * {
-        visibility: hidden;
+        visibility: hidden !important;
     }
 
     #printable-area, #printable-area * {
-        visibility: visible;
+        visibility: visible !important;
     }
 
     #printable-area {
@@ -51,13 +58,14 @@
         left: 0;
         top: 0;
         width: 100%;
-        background-color: #fff;
-        padding: 20px;
+        padding: 0;
+        background-color: #fff !important;
         font-size: 12pt;
         line-height: 1.5;
+        color: #000 !important;
     }
 
-    /* Elemen yang tidak ingin dicetak */
+    /* Elemen yang tidak dicetak */
     .d-print-none,
     nav,
     footer,
@@ -66,26 +74,25 @@
         display: none !important;
     }
 
-    /* Hilangkan efek visual tidak penting */
+    /* Hilangkan efek visual */
     .card, .table, .border, .shadow {
         box-shadow: none !important;
         background-color: white !important;
-        border-color: #000 !important;
+        border: 1px solid #000 !important;
     }
 
-    * {
-        color: #000 !important;
-    }
- table {
-        width: 100%;
+    /* Styling tabel */
+    table {
+        width: 100% !important;
         border-collapse: collapse !important;
         table-layout: fixed;
+        page-break-inside: auto;
     }
 
     th, td {
         border: 1px solid #000 !important;
-        padding: 6px !important;
-        font-size: 11pt !important;
+        padding: 6px 8px !important;
+        font-size: 12pt !important;
         vertical-align: top !important;
         word-wrap: break-word;
         text-align: left;
@@ -98,10 +105,25 @@
 
     tr {
         page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
     }
 }
-
 </style>
+
+
 
         
         <div class="container">
@@ -112,7 +134,7 @@
                             <th>NO</th>
                             <th>Tanggal</th>
                             <th>No. IT</th>
-                            <th>IT SALES</th>
+                            <th>Total Incentive team</th>
                         </tr>
                     </thead>
                     <tbody id="incentive-table-body">
@@ -249,22 +271,31 @@
 </div>
 <script>
     function filterTable() {
-        const fromDate = new Date(document.getElementById('from').value);
-        const toDate = new Date(document.getElementById('to').value);
-        const rows = document.querySelectorAll('#incentive-table-body tr');
+    const fromInput = document.getElementById('from').value;
+    const toInput = document.getElementById('to').value;
+    const rows = document.querySelectorAll('#incentive-table-body tr');
 
-        rows.forEach(row => {
-            const tanggalCell = row.querySelector('.tanggal');
-            if (!tanggalCell) return;
+    let fromDate = fromInput ? new Date(fromInput) : null;
+    let toDate = toInput ? new Date(toInput) : null;
 
-            const rowDate = new Date(tanggalCell.textContent.trim());
-            const show =
-                (!isNaN(fromDate.getTime()) ? rowDate >= fromDate : true) &&
-                (!isNaN(toDate.getTime()) ? rowDate <= toDate : true);
-
-            row.style.display = show ? '' : 'none';
-        });
+    // Kurangi 1 hari dari fromDate
+    if (fromDate) {
+        fromDate.setDate(fromDate.getDate() - 1);
     }
+
+    rows.forEach(row => {
+        const tanggalCell = row.querySelector('.tanggal');
+        if (!tanggalCell) return;
+
+        const rowDate = new Date(tanggalCell.textContent.trim());
+        const show =
+            (!fromDate || rowDate > fromDate) &&
+            (!toDate || rowDate <= toDate);
+
+        row.style.display = show ? '' : 'none';
+    });
+}
+
 
     function resetFilter() {
         document.getElementById('from').value = '';

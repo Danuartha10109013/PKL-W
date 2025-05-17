@@ -15,6 +15,11 @@ class TargetController extends Controller
         $sum = 0;
         return view('pages.penjualan.incentive',compact('data','sum'));
     }
+    public function penrimaIncentiveDirektur(){
+        $data = KomisiM::all();
+        $sum = 0;
+        return view('pages.admin.laporan.incentive',compact('data','sum'));
+    }
 
     public function index()
     {

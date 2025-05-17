@@ -42,7 +42,9 @@
                 <thead>
                     <tr>
                         <th>Bulan</th>
-                        <th>Total SP (Rp)</th>
+                        <th class="text text-left">
+                            Total Seling Price (<span style="text-transform: none;">Rp</span>)
+                        </th>
                         <th>Moving Average</th>
                     </tr>
                 </thead>
