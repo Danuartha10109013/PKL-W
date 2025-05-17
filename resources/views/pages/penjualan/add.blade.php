@@ -177,11 +177,11 @@
                                         />
                                     </div>
                                     <div class="mb-3">
-                                        <label for="no_revisi" class="form-label">No IT</label>
+                                        <label for="no_revisi" class="form-label">No Incentive Team</label>
                                         <input
                                             type="text"
                                             name="no_it"
-                                            id="no_revisi"
+                                            id="no_it"
                                             class="form-control"
                                             required
                                         />
@@ -194,9 +194,9 @@
                                 @endphp
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">Penerima Incentive Sales Enginer (max 3)</label>
+                                    <label class="form-label">Penerima Incentive Sales Enginer </label>
                                     <div id="wrapper-sales-enginer" class="dynamic-wrapper" 
-                                         data-role="sales_enginer" data-max="3" 
+                                         data-role="sales_enginer" data-max="100" 
                                          data-options='@json($salesEnginer->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
                                         <!-- Initial select -->
                                         <div class="dynamic-select mb-2">
@@ -206,9 +206,9 @@
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">Penerima Incentive Aplication Service (max 2)</label>
+                                    <label class="form-label">Penerima Incentive Aplication Service </label>
                                     <div id="wrapper-aplication-service" class="dynamic-wrapper" 
-                                         data-role="aplication_service" data-max="2" 
+                                         data-role="aplication_service" data-max="100" 
                                          data-options='@json($aplicationService->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
                                         <div class="dynamic-select mb-2">
                                             <select name="aplication_service[]" class="form-control" required></select>
@@ -217,9 +217,9 @@
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">Penerima Incentive Administration (max 3)</label>
+                                    <label class="form-label">Penerima Incentive Administration </label>
                                     <div id="wrapper-administration" class="dynamic-wrapper" 
-                                         data-role="administration" data-max="3" 
+                                         data-role="administration" data-max="100" 
                                          data-options='@json($administration->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
                                         <div class="dynamic-select mb-2">
                                             <select name="administration[]" class="form-control" required></select>
@@ -228,9 +228,9 @@
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">Penerima Incentive Manager (max 1)</label>
+                                    <label class="form-label">Penerima Incentive Manager </label>
                                     <div id="wrapper-manager" class="dynamic-wrapper" 
-                                         data-role="manager" data-max="1" 
+                                         data-role="manager" data-max="100" 
                                          data-options='@json($manager->map(fn($p) => ["id" => $p->id, "name" => $p->name]))'>
                                         <div class="dynamic-select mb-2">
                                             <select name="manager[]" class="form-control" required></select>
@@ -369,6 +369,21 @@
                     document.getElementById('no_form').value = data.no_form;
                     document.getElementById('effective_date').value = data.effective_date;
                     document.getElementById('no_revisi').value = data.no_revisi;
+                    // ⏱️ Generate kode no_it otomatis
+                    const poDate = data.po_date;
+                    const noJobCard = data.no_jobcard;
+
+                    if (poDate && noJobCard) {
+                        const dateObj = new Date(poDate);
+                        const day = String(dateObj.getDate()).padStart(2, '0');
+                        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+
+                        const match = noJobCard.match(/(\d{3})$/);
+                        const lastThree = match ? match[1] : '000';
+
+                        const noIT = `IT-${day}${month}-${lastThree}`;
+                        document.getElementById('no_it').value = noIT;
+                    }
 
                     // 🔁 Cek apakah komisi sudah dibuat untuk jobcard ini
                     fetch(`/cek-jobcard?no_jobcard=${data.no_jobcard}`)
@@ -394,6 +409,9 @@
             });
     });
 </script>
+
+
+
 <div class="card mt-4">
     <div class="card-header">List Jobcard</div>
     <div class="card-body">

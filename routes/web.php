@@ -70,6 +70,11 @@ Route::middleware([AutoLogout::class])->group(function () {
             Route::post('/update', [CalculationController::class, 'updateInline'])->name('calculation.update');
 
         });
+        Route::prefix('incentive')->group(function () {
+            Route::get('/penerima',[TargetController::class,'penrimaIncentive'])->name('incentive');
+            // Route::post('/dibayar/{id}/{inId}', [KomisiController::class, 'dibayar'])->name('pegawai.incentive.dibayar');
+
+        });
     });
     Route::group(['prefix' => 'pegawai', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {
         //Dashboard

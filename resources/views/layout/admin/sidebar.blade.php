@@ -32,7 +32,7 @@
     
     <li class="menu-item {{ request()->routeIs('direktur.target') ? 'active' : '' }}">
       <a href="{{ route('direktur.target') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bxs-report"></i>
+        <i class="menu-icon tf-icons bx bx-file"></i>
         <div data-i18n="Analytics">Laporan Target</div>
       </a>
     </li>
@@ -40,6 +40,12 @@
       <a href="{{ route('direktur.calculation') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bxs-calculator"></i>
         <div data-i18n="Analytics">Kelola Persentase</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->routeIs('direktur.incentive') ? 'active' : '' }}">
+      <a href="{{ route('direktur.incentive') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-dollar-circle"></i>
+        <div data-i18n="Analytics">Laporan Penerima Incentive</div>
       </a>
     </li>
     <li class="menu-item {{ request()->routeIs('direktur.k-user') ? 'active' : '' }}">

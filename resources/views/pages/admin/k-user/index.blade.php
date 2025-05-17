@@ -84,7 +84,7 @@
                                                 <label for="role" class="form-label">Role</label>
                                                 <select class="form-select" id="role" name="role">
                                                     <option value="0" {{ $d->role == '0' ? 'selected' : '' }}>Direktur</option>
-                                                    <option value="1" {{ $d->role == '1' ? 'selected' : '' }}>Pegawai</option>
+                                                    <option value="1" {{ $d->role == '1' ? 'selected' : '' }}>Admin</option>
                                                     <option value="2" {{ $d->role == '2' ? 'selected' : '' }}>Penerima</option>
                                                 </select>
                                             </div>
@@ -178,7 +178,7 @@
                             <select class="form-select" id="roleSelect" name="role">
                                 <option value="" selected disabled>--Pilih Role--</option>
                                 <option value="0">Direktur</option>
-                                <option value="1">Pegawai</option>
+                                <option value="1">Admin</option>
                                 <option value="2">Penerima</option>
                             </select>
                         </div>

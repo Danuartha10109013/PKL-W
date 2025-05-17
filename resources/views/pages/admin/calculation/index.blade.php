@@ -7,7 +7,7 @@
 @section('content')
     <div class="card mt-3">
         <div class="card-header">
-            <h5 class="card-title">Daftar Calculation</h5>
+            <h5 class="card-title">Daftar Persentase</h5>
         </div>
         <div class="container">
             <div class="table-responsive">
@@ -15,10 +15,10 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>IT</th>
+                            <th>Incentive Team</th>
                             <th>Sales Enginer</th>
-                            <th>Aplications</th>
-                            <th>Admin</th>
+                            <th>Aplication Service</th>
+                            <th>Administration</th>
                             <th>Manager</th>
                             {{-- <th>TYPE</th> --}}
                         </tr>
