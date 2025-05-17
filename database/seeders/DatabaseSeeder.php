@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'pegawai',
-            'username' => 'pegawai',
-            'email' => 'pegawai@gmail.com',
+            'name' => 'admin',
+            'username' => ' admin',
+            'email' => '    admin@gmail.com',
             'role' => '1',
             'active' => '1',
             'password' => Hash::make('12345'),
@@ -104,6 +104,10 @@ class DatabaseSeeder extends Seeder
             'division' => 'Manager',
             'active' => '1',
             'password' => Hash::make('12345'),
+        ]);
+
+        $this->call([
+            CalculationSeeder::class,
         ]);
     }
 }
