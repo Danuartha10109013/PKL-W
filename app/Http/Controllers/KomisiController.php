@@ -20,12 +20,14 @@ class KomisiController extends Controller
     }
 
     public function add(){
-        return view('pages.penjualan.add');
+        $call= CalculationM::where('active',1)->orderBy('created_at','desc')->get();
+
+        return view('pages.penjualan.add',compact('call'));
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd($request->calculation);
         // Validate the incoming request data directly
         $request->validate([
             'no_jobcard' => 'required|string|max:255',
@@ -71,8 +73,10 @@ class KomisiController extends Controller
         // Format today's date in the desired format and concatenate with the last number
         $no_jo = $lastjo.'JO'.'-'.now()->format('dmy') ;
         // dd($kode);
-        $cal0= CalculationM::find(1);
-
+        $cal0= CalculationM::find($request->calculation);
+        if(!$cal0){
+            return redirect()->back()->with('error', 'Nilai Kalkulasi tidak terdefinisi')
+        ;}
         $komisi = new KomisiM();
         $komisi->no = $kode;
         $komisi->no_jobcard = $request->no_jobcard;

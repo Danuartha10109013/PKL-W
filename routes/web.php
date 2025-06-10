@@ -36,6 +36,25 @@ Route::get('/pegawai/komisi/jobcards/load', function () {
     return response()->json($data);
 });
 
+Route::get('/pegawai/komisi/notifikasi-jobcard', function () {
+    $response = Http::get('http://127.0.0.1:8001/api/data-api');
+    $data = $response->json();
+
+    $notifikasi = collect($data)
+        ->filter(fn($item) => !KomisiM::where('no_jobcard', $item['no_jobcard'])->exists())
+        ->map(function ($item) {
+            return [
+                'no_jobcard' => $item['no_jobcard'],
+                'pesan' => "Ada Jobcard baru.<br>Nomor Jobcard: <strong>{$item['no_jobcard']}</strong><br>Silakan periksa."
+            ];
+        })->values();
+
+    return response()->json([
+        'count' => $notifikasi->count(),
+        'data' => $notifikasi
+    ]);
+});
+
 //auto Logout
 Route::middleware([AutoLogout::class])->group(function () {
 
@@ -68,6 +87,9 @@ Route::middleware([AutoLogout::class])->group(function () {
         Route::prefix('calculation')->group(function () {
             Route::get('/',[CalculationController::class,'index'])->name('calculation');
             Route::post('/update', [CalculationController::class, 'updateInline'])->name('calculation.update');
+            Route::post('/active', [CalculationController::class, 'setActive']);
+            Route::post('/store', [CalculationController::class, 'store']);
+            Route::delete('/delete/{id}', [CalculationController::class, 'destroy'])->name('calculation.destroy');
 
         });
         Route::prefix('incentive')->group(function () {
@@ -76,7 +98,9 @@ Route::middleware([AutoLogout::class])->group(function () {
 
         });
     });
-    Route::group(['prefix' => 'pegawai', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {
+
+    
+    Route::group(['prefix' => 'admin', 'middleware' => ['pegawai'], 'as' => 'pegawai.'], function () {
         //Dashboard
         Route::get('/dashboard', [DashboardController::class, 'pegawai'])->name('dashboard'); 
         

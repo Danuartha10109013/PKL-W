@@ -15,7 +15,55 @@
 
     <ul class="navbar-nav flex-row align-items-center ms-auto">
       <!-- Place this tag where you want the button to render. -->
-      
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+      @if (Auth::user()->role == 1)
+      <li class="nav-item dropdown mr-5">
+        <a class="nav-link position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-bell fs-4"></i>
+          <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+            ●
+          </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notifDropdown" style="width: 300px;">
+          <li class="dropdown-header fw-bold">Notifikasi Jobcard</li>
+          <li><hr class="dropdown-divider"></li>
+          <div id="notifItems" class="px-2 py-1"></div>
+        </ul>
+      </li>
+
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            fetch('/pegawai/komisi/notifikasi-jobcard')
+              .then(response => response.json())
+              .then(data => {
+                const badge = document.getElementById("notifBadge");
+                const notifItems = document.getElementById("notifItems");
+
+                if (data.count > 0) {
+                  badge.style.display = "inline";
+
+                  data.data.forEach(item => {
+                    const li = document.createElement("li");
+                    li.classList.add("dropdown-item");
+                    li.innerHTML  = item.pesan;
+                    notifItems.appendChild(li);
+                  });
+                } else {
+                  const li = document.createElement("li");
+                  li.classList.add("dropdown-item", "text-muted");
+                  li.textContent = "Tidak ada notifikasi baru.";
+                  notifItems.appendChild(li);
+                }
+              })
+              .catch(err => {
+                console.error("Gagal mengambil notifikasi:", err);
+              });
+          });
+        </script>
+
+      @endif
 
       <!-- User -->
       <li class="nav-item navbar-dropdown dropdown-user dropdown">

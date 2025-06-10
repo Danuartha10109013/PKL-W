@@ -119,6 +119,12 @@
                   <div class="d-flex justify-content-between">
                     <label class="form-label" for="password">Password</label>
                   </div>
+                  <style>
+                    .input-group-text i {
+                      font-size: 1.2rem;
+                    }
+                  </style>
+                  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
                   <div class="input-group input-group-merge">
                     <input
@@ -128,19 +134,39 @@
                       name="password"
                       placeholder="••••••••••"
                     />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                    <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility()">
+                      <i class="bx bx-hide" id="toggleIcon"></i>
+                    </span>
                   </div>
+
+                  <script>
+                    function togglePasswordVisibility() {
+                      const passwordInput = document.getElementById('password');
+                      const toggleIcon = document.getElementById('toggleIcon');
+
+                      if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggleIcon.classList.remove('bx-hide');
+                        toggleIcon.classList.add('bx-show');
+                      } else {
+                        passwordInput.type = 'password';
+                        toggleIcon.classList.remove('bx-show');
+                        toggleIcon.classList.add('bx-hide');
+                      }
+                    }
+                  </script>
+
                   @error('password')
                   <small class="text-danger">{{ $message }}</small>
                   @enderror
                 </div>
 
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="remember-me" />
                     <label class="form-check-label" for="remember-me"> Remember Me </label>
                   </div>
-                </div>
+                </div> --}}
 
                 <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>

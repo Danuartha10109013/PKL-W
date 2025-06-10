@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\DB;
 class TargetController extends Controller
 {
     public function penrimaIncentive(){
-        $data = KomisiM::all();
+        $data = KomisiM::orderBy('created_at','desc')->get();
         $sum = 0;
         return view('pages.penjualan.incentive',compact('data','sum'));
     }
     public function penrimaIncentiveDirektur(){
-        $data = KomisiM::all();
+        $data = KomisiM::orderBy('created_at','desc')->get();
         $sum = 0;
         return view('pages.admin.laporan.incentive',compact('data','sum'));
     }

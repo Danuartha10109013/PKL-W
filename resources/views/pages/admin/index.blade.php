@@ -97,7 +97,7 @@
 
                     <div class="card-body text-center d-flex justify-content-center ">
 
-                        <canvas id="salesDistributionChart"></canvas>
+                        <canvas id="salesDistributionChart" style="width: 20rem; height: 20rem;"></canvas>
                     </div>
                     </div>
                 </div>
@@ -132,7 +132,8 @@
             }]
         },
         options: {
-            responsive: true
+            responsive: false,
+            maintainAspectRatio: false
         }
     });
 </script>

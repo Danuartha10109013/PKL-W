@@ -17,5 +17,6 @@ class CalculationM extends Model
         'adm',
         'mng',
         'jenis',
+        'active',
     ];
 }

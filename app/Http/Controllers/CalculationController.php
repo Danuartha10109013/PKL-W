@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\CalculationM;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CalculationController extends Controller
 {
     public function index (){
         // $data = CalculationM::all();
-        $data = CalculationM::where('id',1)->get();
+        $data = CalculationM::orderBy('created_at','desc')->get();
 
         return view('pages.admin.calculation.index',compact('data'));
     }
@@ -60,6 +61,49 @@ class CalculationController extends Controller
     return response()->json(['success' => true]);
 }
 
-    
+    public function setActive(Request $request)
+{
+    $id = $request->input('id');
+    $active = $request->input('active');
+
+    if ($active == 1) {
+        // Reset semua ke 0 dulu
+        DB::table('calculation')->update(['active' => 0]);
+
+        // Set yang dipilih ke 1
+        DB::table('calculation')->where('id', $id)->update(['active' => 1]);
+    } else {
+        DB::table('calculation')->where('id', $id)->update(['active' => 0]);
+    }
+
+    return response()->json(['success' => true]);
+}
+
+public function store(Request $request)
+{
+    try {
+        CalculationM::create([
+            'it' => $request->it,
+            'se' => $request->se,
+            'as' => $request->as,
+            'adm' => $request->adm,
+            'mng' => $request->mng,
+            'active' => 0
+        ]);
+
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+public function destroy($id)
+{
+    $item = CalculationM::findOrFail($id);
+    $item->delete();
+
+    return redirect()->back()->with('success', 'Data berhasil dihapus.');
+}
+
 
 }

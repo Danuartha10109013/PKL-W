@@ -39,7 +39,7 @@
                             <td>{{ $d->username }}</td>
                             <td>{{ $d->email }}</td>
                             <td>
-                                {{ $d->role == '0' ? 'Direktur' : ($d->role == '1' ? 'Pegawai' : 'Penerima') }}
+                                {{ $d->role == '0' ? 'Direktur' : ($d->role == '1' ? 'Admin' : 'Penerima') }}
                                 @if ($d->role == '2')
                                     {{$d->division}}
                                 @endif
