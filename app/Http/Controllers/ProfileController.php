@@ -47,7 +47,7 @@ class ProfileController extends Controller
         $user->username = $request->username;
 
         // Check if password is provided, then hash and save
-        if ($request != null) {
+        if ($request->password != null) {
             $user->password = Hash::make($request->password);
         }
 

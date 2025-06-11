@@ -13,16 +13,25 @@ use Illuminate\Support\Facades\Validator;
 class KomisiController extends Controller
 {
     public function index(){
+
         $komisis = KomisiM::orderBy('created_at','desc')->get();
         $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
         $call= CalculationM::find(1);
         return view('pages.penjualan.index',compact('komisis','komisi_customer','call'));
     }
 
-    public function add(){
-        $call= CalculationM::where('active',1)->orderBy('created_at','desc')->get();
+    public function add(Request $request){
+        // dd($request->all());
 
-        return view('pages.penjualan.add',compact('call'));
+        $call= CalculationM::where('active',1)->orderBy('created_at','desc')->get();
+        
+        if ($request->has('no_jobcard')) {
+            $no_jobcard = $request->no_jobcard;
+            return view('pages.penjualan.add',compact('call','no_jobcard'));
+        }else{
+            return view('pages.penjualan.add',compact('call'));
+        }
+
     }
 
     public function store(Request $request)

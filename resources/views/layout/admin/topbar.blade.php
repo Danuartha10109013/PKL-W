@@ -83,8 +83,15 @@
                 </div>
                 <div class="flex-grow-1">
                   <span class="fw-semibold d-block">{{Auth::user()->name}}</span>
-                  <small class="text-muted">{{ Auth::user()->role == 0 ? 'Admin' : 'Pegawai' }}
+                  <small class="text-muted">
+                    {{
+                        Auth::user()->role == 0 ? 'Direktur' :
+                        (Auth::user()->role == 1 ? 'Admin' :
+                        (Auth::user()->role == 2 ? 'Penerima Incentive' : 'Tidak Dikenal'))
+                    }}
                   </small>
+
+                 
                 </div>
               </div>
             </a>

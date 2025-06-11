@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Add Komisi Penjualan</h5>
-
+                    {{-- {{$no_jobcard}} --}}
                     <form action="{{route('pegawai.komisi.store')}}" method="POST">
                         @csrf
 
@@ -26,9 +26,12 @@
                                     placeholder="Search Job Card..."
                                     list="jobCardSuggestions"
                                     autocomplete="off"
+                                    value="{{ $no_jobcard ?? '' }}"
+
                                 />
                                 <datalist id="jobCardSuggestions"></datalist>
                                 <button type="button" class="btn btn-primary" id="searchBtn">Search</button>
+
                             </div>
                         </div>
 
@@ -336,7 +339,7 @@
         let query = this.value;
 
         if (query.length > 1) {
-            fetch(`/pegawai/komisi/jobcards/search?query=${query}`)
+            fetch(`/admin/komisi/jobcards/search?query=${query}`)
                 .then(response => response.json())
                 .then(data => {
                     let suggestions = document.getElementById('jobCardSuggestions');
@@ -359,7 +362,7 @@
     document.getElementById('jobCardSearch').addEventListener('change', function () {
         let selectedJobCard = this.value;
 
-        fetch(`/pegawai/komisi/jobcards/details?no_jobcard=${selectedJobCard}`)
+        fetch(`/admin/komisi/jobcards/details?no_jobcard=${selectedJobCard}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch job card details');
@@ -424,6 +427,15 @@
                 alert("Terjadi kesalahan saat mengambil data jobcard.");
             });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('jobCardSearch');
+    if (searchInput.value.trim() !== '') {
+        // Trigger 'change' event secara manual untuk memuat detail
+        const event = new Event('change');
+        searchInput.dispatchEvent(event);
+    }
+});
+
 </script>
 
 
@@ -461,7 +473,12 @@
                     let row = `
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${item.no_jobcard}</td>
+                           <td>
+                                ${item.status === 'Sudah dibuat' 
+                                    ? `<span class="text-muted">${item.no_jobcard}</span>` 
+                                    : `<a href="/admin/komisi/add?no_jobcard=${item.no_jobcard}">${item.no_jobcard}</a>`
+                                }
+                            </td>
                             <td class="${item.status === 'Sudah dibuat' ? 'text-success' : 'text-danger'}">
                                 ${item.status}
                             </td>

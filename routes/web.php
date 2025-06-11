@@ -45,7 +45,8 @@ Route::get('/pegawai/komisi/notifikasi-jobcard', function () {
         ->map(function ($item) {
             return [
                 'no_jobcard' => $item['no_jobcard'],
-                'pesan' => "Ada Jobcard baru.<br>Nomor Jobcard: <strong>{$item['no_jobcard']}</strong><br>Silakan periksa."
+                'pesan' => "<a href='/admin/komisi/add?no_jobcard={$item['no_jobcard']}'>Ada Jobcard baru.<br>Nomor Jobcard: <strong>{$item['no_jobcard']}</strong><br>Silakan periksa.</a>"
+
             ];
         })->values();
 
