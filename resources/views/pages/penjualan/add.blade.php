@@ -129,7 +129,7 @@
                                    <div class="mb-3">
                                     <label for="calculation" class="form-label">Pilih calculation</label>
                                     <select name="calculation" id="calculation" class="form-select" required>
-                                        <option value="" selected disabled>-- Pilih Calculation --</option>
+                                        <option value="" selected disabled>-- Pilih Presentase --</option>
                                         @foreach ($call as $c)
                                             <option value="{{ $c->id }}">
                                                 Incentive Team {{ $c->it * 100 }}%, 

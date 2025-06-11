@@ -1,7 +1,7 @@
 @extends('layout.admin.main')
 
 @section('title')
-    Kelola Calculation || {{ Auth::user()->name }}
+    Kelola Presentase || {{ Auth::user()->name }}
 @endsection
 
 @section('content')
