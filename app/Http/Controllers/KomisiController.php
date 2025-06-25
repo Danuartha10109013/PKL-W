@@ -86,6 +86,7 @@ class KomisiController extends Controller
         if(!$cal0){
             return redirect()->back()->with('error', 'Nilai Kalkulasi tidak terdefinisi')
         ;}
+        // dd($cal0);
         $komisi = new KomisiM();
         $komisi->no = $kode;
         $komisi->no_jobcard = $request->no_jobcard;
@@ -127,7 +128,7 @@ class KomisiController extends Controller
         // Save the Komisi Penjualan entry
         $komisi->save();
 
-        $cal1= CalculationM::find(2);
+        $cal1= CalculationM::find($request->calculation);
         
         //komisi customer
         $komisi_customer = new KomisiCostumerM();
