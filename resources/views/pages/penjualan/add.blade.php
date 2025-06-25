@@ -127,7 +127,7 @@
                                         />
                                     </div>
                                    <div class="mb-3">
-                                    <label for="calculation" class="form-label">Pilih calculation</label>
+                                    <label for="calculation" class="form-label">Pilih Presentase</label>
                                     <select name="calculation" id="calculation" class="form-select" required>
                                         <option value="" selected disabled>-- Pilih Presentase --</option>
                                         @foreach ($call as $c)

@@ -63,18 +63,21 @@ class CalculationController extends Controller
 
     public function setActive(Request $request)
 {
+    // dd($request->all());
     $id = $request->input('id');
     $active = $request->input('active');
+    $data = CalculationM::find($id);
+    $data->active = $active;
+    $data->save();
+    // if ($active == 1) {
+    //     // Reset semua ke 0 dulu
+    //     DB::table('calculation')->update(['active' => 0]);
 
-    if ($active == 1) {
-        // Reset semua ke 0 dulu
-        DB::table('calculation')->update(['active' => 0]);
-
-        // Set yang dipilih ke 1
-        DB::table('calculation')->where('id', $id)->update(['active' => 1]);
-    } else {
-        DB::table('calculation')->where('id', $id)->update(['active' => 0]);
-    }
+    //     // Set yang dipilih ke 1
+    //     DB::table('calculation')->where('id', $id)->update(['active' => 1]);
+    // } else {
+    //     DB::table('calculation')->where('id', $id)->update(['active' => 0]);
+    // }
 
     return response()->json(['success' => true]);
 }

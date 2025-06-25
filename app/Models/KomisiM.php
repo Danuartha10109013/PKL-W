@@ -29,5 +29,6 @@ class KomisiM extends Model
         'sales_name',
         'total_sp',
         'no_it',
+        'calculation',
     ];
 }

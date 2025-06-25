@@ -39,7 +39,28 @@
             <h5 class="card-title fw-bold">Incentive Sales</h5>
         </div>
         <div class="container mb-3">
-            <div class="table-responsive">
+            <form action="{{ route('pegawai.komisi') }}" method="GET">
+                <label for="calculation">Filter Presentase</label>
+                @php
+                    $presentase = \App\Models\CalculationM::orderBy('updated_at','desc')->get();
+                @endphp
+                <select name="persentase" id="calculation" class="form-select" required onchange="this.form.submit()">
+                    <option value="" disabled {{ ( !isset($persen)) ? 'selected' : '' }}>-- Pilih Presentase --</option>
+                    @foreach ($presentase as $c)
+                        <option value="{{ $c->id }}"
+                            @if ( (isset($persen) && $persen->id == $c->id)) selected @endif>
+                            Incentive Team {{ $c->it * 100 }}%, 
+                            Sales Engineer {{ $c->se * 100 }}%, 
+                            Application Service {{ $c->as * 100 }}%, 
+                            Administration {{ $c->adm * 100 }}%, 
+                            Manager {{ $c->mng * 100 }}%
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+
+
+            <div class="table-responsive mt-3">
                 <table class="table table-striped table-bordered table-hover text-center align-middle">
                     <thead class="table-light">
                         <tr>

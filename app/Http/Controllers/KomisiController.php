@@ -12,12 +12,26 @@ use Illuminate\Support\Facades\Validator;
 
 class KomisiController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
+        // dd($request->all());
+        if($request->persentase){
 
-        $komisis = KomisiM::orderBy('created_at','desc')->get();
-        $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
-        $call= CalculationM::find(1);
-        return view('pages.penjualan.index',compact('komisis','komisi_customer','call'));
+            $komisis = KomisiM::where('calculation',$request->persentase)->orderBy('created_at','desc')->get();
+            $komisi = KomisiM::latest()->first();
+            $persen= CalculationM::find($request->persentase);
+            $call= CalculationM::find($request->persentase);
+            // dd($komisis);
+            $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
+            return view('pages.penjualan.index',compact('komisis','komisi_customer','persen','call'));
+        }else{
+
+            $komisis = KomisiM::orderBy('created_at','desc')->get();
+            $komisi = KomisiM::latest()->first();
+            $call= CalculationM::find($komisi->calculation);
+            // dd($komisis);
+            $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
+            return view('pages.penjualan.index',compact('komisis','komisi_customer','call'));
+        }
     }
 
     public function add(Request $request){
@@ -103,6 +117,7 @@ class KomisiController extends Controller
         $komisi->adm = $komisi->it * $cal0->adm;
         $komisi->mng = $komisi->it * $cal0->mng;
         $komisi->no_it = $request->no_it;
+        $komisi->calculation = $request->calculation;
         $komisi->sales_name = $request->sales_name;
         $komisi->no_jo = $no_jo;
         $komisi->jo_date = now()->toDateString();
@@ -177,7 +192,7 @@ class KomisiController extends Controller
     public function delete($id){
         $data = KomisiM::find($id);
         $data->delete();
-        return redirect()->back()->with('success', 'Komis Telah Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Komisi Telah Berhasil Dihapus');
     }
     
     public function print($id){
