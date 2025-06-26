@@ -87,91 +87,70 @@ class TargetController extends Controller
         return view('pages.admin.laporan.target',compact('dataPerBulan', 'prediksiBulanDepan'));
     }
     
-    public function incentive(Request $request){
-        
-            // Retrieve filter values
-            $from = $request->input('from');
-            $to = $request->input('to');
+    public function incentive(Request $request)
+{
+    $from = $request->input('from');
+    $to = $request->input('to');
 
-            $user = Auth::user();
-            $userId = (string) Auth::id();
-            $division = $user->division;
+    $user = Auth::user();
+    $userId = (string) $user->id;
+    $division = $user->division;
 
-            // Mulai query dasar
-            $query = KomisiM::query();
+    $query = KomisiM::query();
 
-            // Tambahkan filter tanggal jika ada
-            if ($from && $to) {
-                $query->whereBetween('created_at', [$from, $to]);
-            }
+    if ($from && $to) {
+        $query->whereBetween('created_at', [$from, $to]);
+    }
 
-            // Filter berdasarkan division dan userId
-            $sum = 0;
+    // Ambil semua data terlebih dahulu (hanya sekali)
+    $allData = $query->get();
 
-            switch ($division) {
-                case 'Sales Enginer':
-                    $data = $query->get(); // Ambil semua data dulu
-                    foreach ($data as $item) {
-                        $penerima = json_decode($item->penerimase, true); // array of ['id' => ..., 'status' => ...]
-                        if (collect($penerima)->contains('id', (string) $userId)) {
-                            $penerimaCount = count($penerima);
-                            $in = ($item->se ?? 0) / max(1, $penerimaCount);
-                            $sum += $in;
-                        }
-                    }
-                    break;
+    $data = collect(); // Data akhir yang cocok dengan user
+    $sum = 0;
+    $penerimaCount = 0;
 
-                case 'Aplication Service':
-                    $data = $query->get();
-                    foreach ($data as $item) {
-                        $penerima = json_decode($item->penerimaap, true);
-                        if (collect($penerima)->contains('id', (string) $userId)) {
-                            $penerimaCount = count($penerima);
-                            $in = ($item->as ?? 0) / max(1, $penerimaCount);
-                            $sum += $in;
-                        }
-                    }
-                    break;
-
-                case 'Administration':
-                    $data = $query->get();
-                    foreach ($data as $item) {
-                        $penerima = json_decode($item->penerimaadm, true);
-                        if (collect($penerima)->contains('id', (string) $userId)) {
-                            $penerimaCount = count($penerima);
-                            $in = ($item->adm ?? 0) / max(1, $penerimaCount);
-                            $sum += $in;
-                        }
-                    }
-                    break;
-
-                case 'Manager':
-                    $data = $query->get();
-                    foreach ($data as $item) {
-                        $penerima = json_decode($item->penerimamng, true);
-                        if (collect($penerima)->contains('id', (string) $userId)) {
-                            $penerimaCount = count($penerima);
-                            $in = ($item->mng ?? 0) / max(1, $penerimaCount);
-                            $sum += $in;
-                        }
-                    }
-                    break;
-
-                default:
-                    $data = collect(); // Kosongkan jika division tidak cocok
-            }
-
-
-            $data = $query->get();
-
-// dd($data); // akan berisi Collection
-
-        
-            // Calculate the sum
-        
-            // Pass data and filter parameters to the view
-            return view('pages.penerima.index', compact('data', 'sum', 'from', 'to', 'division','penerimaCount'));
+    foreach ($allData as $item) {
+        // Tentukan field berdasarkan divisi
+        switch ($division) {
+            case 'Sales Enginer':
+                $penerimaField = 'penerimase';
+                $amountField = 'se';
+                break;
+            case 'Aplication Service':
+                $penerimaField = 'penerimaap';
+                $amountField = 'as';
+                break;
+            case 'Administration':
+                $penerimaField = 'penerimaadm';
+                $amountField = 'adm';
+                break;
+            case 'Manager':
+                $penerimaField = 'penerimamng';
+                $amountField = 'mng';
+                break;
+            default:
+                $penerimaField = null;
+                $amountField = null;
         }
+
+        // Jika tidak ada field yang sesuai, skip loop
+        if (!$penerimaField || !$amountField) {
+            continue;
+        }
+
+        $penerima = json_decode($item->$penerimaField, true);
+
+        if (is_array($penerima) && collect($penerima)->contains('id', $userId)) {
+            $penerimaCount = count($penerima);
+            $incentive = ($item->$amountField ?? 0) / max(1, $penerimaCount);
+            $sum += $incentive;
+            $data->push($item); // Simpan hanya data relevan
+        }
+    }
+
+    return view('pages.penerima.index', compact('data', 'sum', 'from', 'to', 'division', 'penerimaCount'));
+}
+
 
         public function confirmation($id, $inId)
 {

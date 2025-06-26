@@ -136,10 +136,10 @@
                             if (isset($divisionMap[$userDivision])) {
                                 $field = $divisionMap[$userDivision];
                                 $dataJson = json_decode($d->$field ?? '[]', true);
-
                                 if (is_array($dataJson)) {
                                     foreach ($dataJson as $item) {
-                                        if (isset($item['id'], $item['status']) && $item['id'] == $userId) {
+                                        if (isset($item['id'], $item['status'])) {
+                                            // dd($dataJson);
                                             $status = $item['status'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
                                             $bayar = $item['dibayar'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
                                             break;
@@ -155,8 +155,14 @@
                                 'Manager' => $d->mng,
                                 default => 0,
                             };
+                            // dd($penerimaCount);
+                            if($penerimaCount == 0){
+                                $formattedAmount = 'Rp. 0' ;
+                                
+                            }else{
+                                $formattedAmount = 'Rp. ' . number_format($amount / $penerimaCount, 2, ',', '.');
 
-                            $formattedAmount = 'Rp. ' . number_format($amount / $penerimaCount, 2, ',', '.');
+                            }
                             $showButtons = $index === 0 ? '' : 'd-none';
                         @endphp
 
