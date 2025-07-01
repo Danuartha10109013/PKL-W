@@ -75,21 +75,27 @@
                         @foreach ($data as $d)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="it">
-                                    {{ $d->it }}
-                                </td>
-                                <td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="se">
-                                    {{ $d->se }}
-                                </td>
-                                <td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="as">
-                                    {{ $d->as }}
-                                </td>
-                                <td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="adm">
-                                    {{ $d->adm }}
-                                </td>
-                                <td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="mng">
-                                    {{ $d->mng }}
-                                </td>
+
+<td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="it">
+    {{ $d->it ? $d->it * 100 : 0 }}%
+</td>
+
+<td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="se">
+    {{ $d->se ? $d->se * 100 : 0 }}%
+</td>
+
+<td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="as">
+    {{ $d->as ? $d->as * 100 : 0 }}%
+</td>
+
+<td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="adm">
+    {{ $d->adm ? $d->adm * 100 : 0 }}%
+</td>
+
+<td contenteditable="true" class="editable" data-id="{{ $d->id }}" data-field="mng">
+    {{ $d->mng ? $d->mng * 100 : 0 }}%
+</td>
+
                                 <td>
                                     <input
                                         type="checkbox"
@@ -154,7 +160,7 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.28/dist/sweetalert2.min.js"></script>
 
-    <script>
+    {{-- <script>
         document.addEventListener("DOMContentLoaded", function () {
             const editableCells = document.querySelectorAll('.editable');
 
@@ -219,7 +225,85 @@
                 });
             });
         });
-    </script>
+    </script> --}}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const editableCells = document.querySelectorAll('.editable');
+
+    editableCells.forEach(cell => {
+        let originalContent = '';
+
+        cell.addEventListener('focus', function () {
+            originalContent = this.textContent.trim();
+        });
+
+        cell.addEventListener('blur', function () {
+            let newValueRaw = this.textContent.trim();
+            const id = this.dataset.id;
+            const field = this.dataset.field;
+
+            // Bersihkan simbol % dan ubah koma ke titik
+            newValueRaw = newValueRaw.replace('%', '').replace(',', '.');
+
+            const newValue = parseFloat(newValueRaw) / 100;
+            const originalValue = parseFloat(originalContent.replace('%', '').replace(',', '.')) / 100;
+
+            if (!isNaN(newValue) && newValue !== originalValue) {
+                const payload = {
+                    id: id,
+                    field: field,
+                    value: newValue
+                };
+
+                // Log ke konsol
+                console.log('Data yang dikirim:', payload);
+
+                fetch(`/direktur/calculation/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        cell.textContent = (newValue * 100).toFixed(0) + '%';
+
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Perubahan berhasil disimpan.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        cell.textContent = originalContent;
+
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: data.message || 'Terjadi kesalahan saat menyimpan.',
+                            icon: 'error',
+                            confirmButtonText: 'Coba Lagi'
+                        });
+                    }
+                })
+                .catch(() => {
+                    cell.textContent = originalContent;
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan saat menyimpan.',
+                        icon: 'error',
+                        confirmButtonText: 'Coba Lagi'
+                    });
+                });
+            }
+        });
+    });
+});
+</script>
+
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const checkboxes = document.querySelectorAll('.active-checkbox');

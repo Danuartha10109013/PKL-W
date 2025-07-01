@@ -16,38 +16,44 @@ class CalculationController extends Controller
     }
 
 
-    public function updateInline(Request $request)
+public function updateInline(Request $request)
 {
     // Validasi input
     $data = $request->validate([
-        'id' => 'required|integer',
+        'id'    => 'required|integer',
         'field' => 'required|string',
-        'value' => 'nullable|string'
+        'value' => 'nullable|numeric' // ubah menjadi numeric agar validasi angka
     ]);
 
-    // Cari record berdasarkan ID
+    // Ambil record
     $record = CalculationM::find($data['id']);
     if (!$record) {
-        return response()->json(['success' => false, 'message' => 'Data tidak ditemukan.']);
+        return response()->json([
+            'success' => false,
+            'message' => 'Data tidak ditemukan.'
+        ]);
     }
 
-    // Field yang diizinkan
+    // Field yang boleh diedit
     $allowedFields = ['it', 'se', 'as', 'adm', 'mng'];
     if (!in_array($data['field'], $allowedFields)) {
-        return response()->json(['success' => false, 'message' => 'Field tidak valid.']);
+        return response()->json([
+            'success' => false,
+            'message' => 'Field tidak valid.'
+        ]);
     }
 
-    // Simulasikan update
+    // Simpan nilai baru sementara
     $record->{$data['field']} = $data['value'];
 
-    // Field yang dihitung totalnya (kecuali 'it')
+    // Hitung total field selain 'it'
     $fieldsToSum = ['se', 'as', 'adm', 'mng'];
     $total = 0;
     foreach ($fieldsToSum as $field) {
         $total += floatval($record->{$field} ?? 0);
     }
 
-    // Validasi jika total melebihi 1
+    // Validasi jika total melebihi 1 (100%)
     if ($total > 1) {
         return response()->json([
             'success' => false,
@@ -55,11 +61,16 @@ class CalculationController extends Controller
         ]);
     }
 
-    // Simpan perubahan jika valid
+    // Simpan data
     $record->save();
 
-    return response()->json(['success' => true]);
+    return response()->json([
+        'success' => true,
+        'message' => 'Data berhasil diperbarui.',
+        'total'   => $total
+    ]);
 }
+
 
     public function setActive(Request $request)
 {
