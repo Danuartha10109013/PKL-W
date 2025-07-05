@@ -90,32 +90,31 @@ class TargetController extends Controller
 
     public function laporan(){
          $dataPerBulan = KomisiM::select(
-            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as bulan"),
-            DB::raw("SUM(total_sp) as total_per_bulan")
-        )
-        ->groupBy('bulan')
-        ->orderBy('bulan', 'asc')
-        ->get();
+        DB::raw("DATE_FORMAT(created_at, '%Y-%m') as bulan"),
+        DB::raw("SUM(total_sp) as total_per_bulan")
+    )
+    ->groupBy('bulan')
+    ->orderBy('bulan', 'asc')
+    ->get();
 
-        // Hitung rata-rata bergerak dimulai dari bulan ke-4 (index ke-3)
-        $dataPerBulan = $dataPerBulan->map(function ($item, $index) use ($dataPerBulan) {
-            $item->moving_average = null;
+    // Hitung rata-rata bergerak dimulai dari bulan ke-3 (index ke-2)
+    $dataPerBulan = $dataPerBulan->map(function ($item, $index) use ($dataPerBulan) {
+        $item->moving_average = null;
 
-            // Mulai dari index ke-3 agar bulan ke-1, 2, dan 3 tetap kosong
-            if ($index >= 3) {
-                $sum = $dataPerBulan[$index - 1]->total_per_bulan +
-                    $dataPerBulan[$index - 2]->total_per_bulan +
-                    $dataPerBulan[$index - 3]->total_per_bulan;
+        // Mulai dari index ke-2 agar bulan ke-1 dan 2 tetap kosong
+        if ($index >= 2) {
+            $sum = $dataPerBulan[$index - 1]->total_per_bulan +
+                   $dataPerBulan[$index - 2]->total_per_bulan;
 
-                $item->moving_average = $sum > 0 ? $sum / 3 : 0;
-            }
+            $item->moving_average = $sum > 0 ? $sum / 2 : 0;
+        }
 
-            return $item;
-        });
+        return $item;
+    });
 
-        // Ambil data bulan terakhir untuk prediksi bulan berikutnya
-        $lastMonth = $dataPerBulan->last();
-        $prediksiBulanDepan = $lastMonth->moving_average ?? 1;
+    // Ambil data bulan terakhir untuk prediksi bulan berikutnya
+    $lastMonth = $dataPerBulan->last();
+    $prediksiBulanDepan = $lastMonth->moving_average ?? 1;
         // Pastikan minimal 1 untuk menghindari pembagian nol
         return view('pages.admin.laporan.target',compact('dataPerBulan', 'prediksiBulanDepan'));
     }

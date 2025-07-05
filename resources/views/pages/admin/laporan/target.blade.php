@@ -4,24 +4,21 @@
 @endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <!-- Title for Print (Visible during print) -->
     <h3 class="text-center" id="printHeader" style="display: none;">Laporan Target</h3>
 
     <div class="card">
-        <!-- Card Header (Hidden during printing) -->
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" id="cardHeader">
             <h4 class="mb-0 text-white">Target Pencapaian Bulanan</h4>
             <button class="btn btn-warning" onclick="window.print()"><i class="bx bxs-printer"></i></button>
         </div>
         <div class="card-body">
             <div class="row mt-3">
-                <!-- Progress -->
                 <div class="col-md-6 text-center align-middle">
                     <h5 class="mb-3 mt-3">Progres Bulanan</h5>
                     <div class="progress mb-3" style="height: 30px;">
                         @php
                             $total = $dataPerBulan->last()->total_per_bulan ?? 0;
-                            $prediksi = max($prediksiBulanDepan, 1); // Pastikan nilai minimal 1
+                            $prediksi = max($prediksiBulanDepan, 1);
                             $progress = ($total / $prediksi) * 100;
                         @endphp
                         <div class="progress-bar" role="progressbar" style="width: {{ min($progress, 100) }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
@@ -29,71 +26,78 @@
                         </div>
                     </div>
                     <p>Target bulan depan: <strong>Rp {{ number_format($prediksiBulanDepan, 0, ',', '.') }}</strong></p>
-                </div>                    
-                <!-- Grafik -->
+                </div>
                 <div class="col-md-6">
                     <canvas id="targetChart"></canvas>
                 </div>
             </div>
 
-            <!-- Tabel Data Bulanan -->
             <h5 class="mt-4">Detail Pencapaian per Bulan</h5>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Bulan</th>
-                        <th class="text text-left">
-                            Total Selling Price (<span style="text-transform: none;">Rp</span>)
-                        </th>
+                        <th>Total Selling Price (Rp)</th>
                         <th>Moving Average</th>
+                        <th>Status</th>
+                        <th>Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($dataPerBulan as $data)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $data->bulan)->translatedFormat('F Y') }}</td>
-                        <td>Rp {{ number_format($data->total_per_bulan, 0, ',', '.') }}</td>
-                        <td>
-                            @if($data->moving_average)
-                                Rp {{ number_format($data->moving_average, 0, ',', '.') }}
-                            @else
-                                <em class="text-muted">Data Tidak Cukup</em>
-                            @endif
-                        </td>
-                    </tr>
+                        @php
+                            $hasMovingAvg = $data->moving_average !== null;
+                            $selisih = $hasMovingAvg ? $data->total_per_bulan - $data->moving_average : null;
+                            $status = $selisih >= 0 ? 'Tercapai' : 'Tidak Tercapai';
+                            $keterangan = $selisih >= 0
+                                ? "Performa melebihi target. Potensi keuntungan terhadap target sebesar Rp " . number_format(abs($selisih), 0, ',', '.')
+                                : "Performa belum mencapai target. Potensi kerugian terhadap target sebesar Rp " . number_format(abs($selisih), 0, ',', '.');
+                        @endphp
+                        <tr>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $data->bulan)->translatedFormat('F Y') }}</td>
+                            <td>Rp {{ number_format($data->total_per_bulan, 0, ',', '.') }}</td>
+                            <td>
+                                @if($hasMovingAvg)
+                                    Rp {{ number_format($data->moving_average, 0, ',', '.') }}
+                                @else
+                                    <em class="text-muted">Data Tidak Cukup</em>
+                                @endif
+                            </td>
+                            <td>
+                                @if($hasMovingAvg)
+                                    <strong>{{ $status }}</strong>
+                                @endif
+                            </td>
+                            <td>
+                                @if($hasMovingAvg)
+                                    {{ $keterangan }}
+                                @endif
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
+
             </table>
         </div>
     </div>
 </div>
 
 <style>
-    /* Make sure the canvas element has a proper size */
     canvas {
         display: block;
         width: 100%;
-        height: 400px; /* Set a fixed height for the chart */
+        height: 400px;
     }
 
-    /* Print Styles */
     @media print {
-        /* Hide the print button during printing */
-        .btn-warning {
+        .btn-warning, #cardHeader {
             display: none;
         }
 
-        /* Hide the card header */
-        #cardHeader {
-            display: none;
-        }
-
-        /* Show the print header */
         #printHeader {
             display: block;
         }
 
-        /* Show only the content inside .card-body and the header */
         body * {
             visibility: hidden;
         }
@@ -101,17 +105,6 @@
         .card, .card * {
             visibility: visible;
             overflow: hidden;
-            margin-top: -0.3em
-        }
-
-        .card-header {
-            font-size: 18px; /* Adjust title size */
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .progress {
-            display: block; /* Make sure the progress bar is visible */
         }
 
         table {
@@ -129,7 +122,6 @@
             background-color: #f2f2f2;
         }
 
-        /* Page break after the content */
         .card {
             page-break-after: always;
         }
@@ -137,46 +129,87 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0/dist/chartjs-plugin-annotation.min.js"></script>
+
 <script>
-    // Get data from Blade variables
-    const bulanLabels = @json($dataPerBulan->pluck('bulan')->map(fn($b) => \Carbon\Carbon::createFromFormat('Y-m', $b)->translatedFormat('F Y'))); 
+    Chart.register(window['chartjs-plugin-annotation']);
+
+    const bulanLabels = @json($dataPerBulan->pluck('bulan')->map(fn($b) => \Carbon\Carbon::createFromFormat('Y-m', $b)->translatedFormat('F')));
     const totalSpData = @json($dataPerBulan->pluck('total_per_bulan'));
     const movingAverageData = @json($dataPerBulan->pluck('moving_average'));
 
-    // Create chart
+    const arrows = totalSpData.map((val, idx, arr) => {
+        if (idx === 0) return null;
+        return val > arr[idx - 1] ? '↑' : val < arr[idx - 1] ? '↓' : '';
+    });
+
+    const pointLabels = arrows.map((arrow, idx) => ({
+        x: bulanLabels[idx],
+        y: totalSpData[idx],
+        label: arrow
+    }));
+
     const ctx = document.getElementById('targetChart').getContext('2d');
-    const targetChart = new Chart(ctx, {
-        type: 'line', // Chart type (line chart)
+
+    new Chart(ctx, {
+        type: 'line',
         data: {
-            labels: bulanLabels, // X-axis labels
+            labels: bulanLabels,
             datasets: [
                 {
-                    label: 'Total SP', // Label for the first dataset
-                    data: totalSpData, // Data for the first dataset
-                    borderColor: 'rgba(75, 192, 192, 1)', // Line color for Total SP
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Fill color for Total SP
-                    fill: true, // Fill the area under the line
+                    label: 'Realisasi Penjualan (Selling Price)',
+                    data: totalSpData,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0,128,0,0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 5,
+                    pointBackgroundColor: 'green',
                 },
                 {
-                    label: 'Moving Average', // Label for the second dataset
-                    data: movingAverageData, // Data for the second dataset
-                    borderColor: 'rgba(255, 99, 132, 1)', // Line color for Moving Average
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Fill color for Moving Average
-                    fill: true, // Fill the area under the line
+                    label: 'Target (Moving Average)',
+                    data: movingAverageData,
+                    borderColor: 'blue',
+                    borderDash: [5, 5],
+                    backgroundColor: 'rgba(0,0,255,0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 5,
+                    pointBackgroundColor: 'blue',
                 }
             ]
         },
         options: {
-            responsive: false, // Make chart responsive
-            animation: {
-                duration: 0 // Disable animation (set duration to 0)
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            return `${ctx.dataset.label}: Rp ${ctx.parsed.y.toLocaleString('id-ID')}`;
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: pointLabels.map(point => point.label ? {
+                        type: 'label',
+                        xValue: point.x,
+                        yValue: point.y,
+                        content: [point.label],
+                        color: point.label === '↑' ? 'green' : 'red',
+                        backgroundColor: 'transparent',
+                        font: { weight: 'bold', size: 16 },
+                        position: 'top'
+                    } : null).filter(a => a !== null)
+                }
             },
             scales: {
-                y: {
-                    beginAtZero: true, // Start Y-axis from zero
-                }
+                y: { title: { display: true, text: 'Nilai (Rp)' } },
+                x: { title: { display: true, text: 'Bulan' } }
             }
         }
     });
 </script>
+
 @endsection

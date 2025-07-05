@@ -69,7 +69,7 @@
                             <th>No Job Card</th>
                             <th>No PO</th>
                             <th>No IT</th>
-                            <th>Bottom Of Price</th>
+                            <th>Total Bottom Of Price</th>
                             <th>Total Sales Price</th>
                             <th>Gross Price</th>
                             <th>Incentive Team ({{$call->it *100}})%</th>
