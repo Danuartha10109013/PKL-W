@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class TargetController extends Controller
 {
     public function penrimaIncentive(){
-        $data = KomisiM::orderBy('created_at','desc')->get();
+        $data = KomisiM::orderBy('created_at','asc')->get();
         $sum = 0;
         return view('pages.penjualan.incentive',compact('data','sum'));
     }
@@ -128,7 +128,7 @@ class TargetController extends Controller
     $userId = (string) $user->id;
     $division = $user->division;
 
-    $query = KomisiM::query();
+    $query = KomisiM::orderBy('created_at','asc');
 
     if ($from && $to) {
         $query->whereBetween('created_at', [$from, $to]);

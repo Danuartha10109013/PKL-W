@@ -130,23 +130,25 @@
 
                             $status = 'Tidak Ditemukan';
                             $bayar = 'Belum Dibayar';
+
                             $userDivision = Auth::user()->division;
                             $userId = Auth::user()->id;
 
                             if (isset($divisionMap[$userDivision])) {
                                 $field = $divisionMap[$userDivision];
                                 $dataJson = json_decode($d->$field ?? '[]', true);
+
                                 if (is_array($dataJson)) {
                                     foreach ($dataJson as $item) {
-                                        if (isset($item['id'], $item['status'])) {
-                                            // dd($dataJson);
-                                            $status = $item['status'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
-                                            $bayar = $item['dibayar'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
+                                        if (isset($item['id']) && $item['id'] == $userId) {
+                                            $status = isset($item['status']) && $item['status'] == 1 ? 'Terkonfirmasi' : 'Belum dikonfirmasi';
+                                            $bayar = isset($item['dibayar']) && $item['dibayar'] == 1 ? 'Sudah Dibayar' : 'Belum Dibayar';
                                             break;
                                         }
                                     }
                                 }
                             }
+
 
                             $amount = match($userDivision) {
                                 'Sales Enginer' => $d->se,
@@ -164,6 +166,7 @@
 
                             }
                             $showButtons = $index === 0 ? '' : 'd-none';
+
                         @endphp
 
                         <tr class="data-row" data-index="{{ $index }}" data-status="{{ $status }}">
@@ -176,12 +179,15 @@
                             <td>{{ $d->customer_name }}</td>
                             <td>{{ $d->no_po }}</td>
                             <td>{{ $d->no_jo }}</td>
-                            <td>
-                                {{ $formattedAmount }}
+                            <td class="amount-cell">{{ $formattedAmount }}
+
                                 <div class="status-cell mt-2">
-                                    @if ($status === 'Sudah Dibayar')
-                                        <p class="text-success text-center">{{ $status }}</p>
-                                    @elseif ($status === 'Belum Dibayar')
+                                    @if ($bayar === 'Sudah Dibayar')
+                                        <p class="text-success text-left">{{ $bayar }}</p>
+                                        @if ($status === 'Belum dikonfirmasi')
+                                            <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a>
+                                        @endif
+                                    @elseif ($bayar === 'Belum Dibayar')
                                         <strong>Status:</strong> {{ $bayar }} <br>
                                         <a href="#" class="btn btn-danger mb-2 mt-2 {{ $showButtons }}" data-bs-toggle="modal" data-bs-target="#catatanModal{{ $d->id }}">
                                             Kirim Catatan
@@ -211,9 +217,7 @@
                                             </div>
                                         </div>
 
-                                        @if ($bayar === 'Sudah Dibayar')
-                                            <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a>
-                                        @endif
+                                        
                                     @else
                                         <p class="text-muted text-center">{{ $status }}</p>
                                     @endif
@@ -243,7 +247,7 @@
                         const row = rows[i];
                         const cell = row.querySelector('.status-cell');
 
-                        if (firstStatus !== 'Sudah Dibayar') {
+                        if (firstStatus !== 'Terkonfirmasi') {
                             cell.innerHTML = '<p class="text-warning text-center">Menunggu konfirmasi data sebelumnya</p>';
                         } else {
                             const hiddenButtons = cell.querySelectorAll('.d-none');
@@ -265,42 +269,49 @@
     </div>
 </div>
 <script>
-    function filterTable() {
+function filterTable() {
     const fromDateInput = document.getElementById('from').value;
     const toDateInput = document.getElementById('to').value;
-    const rows = document.querySelectorAll('#incentive-table-body tr');
+    const rows = document.querySelectorAll('.data-row');
 
-    if (!fromDateInput && !toDateInput) {
-        rows.forEach(row => row.style.display = '');
-        return;
-    }
+    const fromDate = fromDateInput ? new Date(fromDateInput) : null;
+    const toDate = toDateInput ? new Date(toDateInput) : null;
+    if (fromDate) fromDate.setHours(0, 0, 0, 0);
+    if (toDate) toDate.setHours(23, 59, 59, 999);
 
-    // Convert input dates to yyyy-mm-dd format
-    const fromDate = fromDateInput ? new Date(fromDateInput).toISOString().split('T')[0] : null;
-    const toDate = toDateInput ? new Date(toDateInput).toISOString().split('T')[0] : null;
+    let total = 0;
 
     rows.forEach(row => {
         const tanggalCell = row.querySelector('.tanggal');
-        if (!tanggalCell) return;
+        const amountCell = row.querySelector('.amount-cell');
+        if (!tanggalCell || !amountCell) return;
 
-        // Format tanggal dari row ke yyyy-mm-dd
         const rowDate = new Date(tanggalCell.textContent.trim());
-        const formattedRowDate = rowDate.toISOString().split('T')[0];
 
         let show = true;
-        if (fromDate && formattedRowDate < fromDate) show = false;
-        if (toDate && formattedRowDate > toDate) show = false;
+        if (fromDate && rowDate < fromDate) show = false;
+        if (toDate && rowDate > toDate) show = false;
 
         row.style.display = show ? '' : 'none';
+
+        if (show) {
+            const text = amountCell.textContent.trim();
+            const match = text.match(/Rp\.?\s?([\d.,]+)/);
+            if (match) {
+                total += parseFloat(match[1].replace(/\./g, '').replace(',', '.')) || 0;
+            }
+        }
     });
-}
 
-
-    function resetFilter() {
-        document.getElementById('from').value = '';
-        document.getElementById('to').value = '';
-        filterTable();
+    const totalCell = document.querySelector('#total-nominal');
+    if (totalCell) {
+        totalCell.textContent = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 2
+        }).format(total);
     }
+}
 </script>
 
 @endsection

@@ -6,7 +6,11 @@
 
 @section('content')
 <div class="mb-3">
+    @if (Auth::user()->role == 3)
     <form action="{{ route('direktur.komisi') }}" method="GET" class="d-flex align-items-center">
+    @else
+    <form action="{{ route('penerima.komisi') }}" method="GET" class="d-flex align-items-center">
+    @endif
         <div class="me-2">
             <label for="from" class="form-label">Dari Tanggal</label>
             <input type="date" name="from" id="from" class="form-control" value="{{ request('from') }}">
@@ -18,6 +22,7 @@
         <div class="mt-4">
             <button type="submit" class="btn btn-primary">Filter</button>
         </div>
+        <!-- <a href="{{ route('direktur.komisi') }}" class="btn btn-danger">Clear</a> -->
     </form>
 </div>
 

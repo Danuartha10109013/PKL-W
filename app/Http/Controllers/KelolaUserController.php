@@ -68,7 +68,7 @@ class KelolaUserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $id,
             'email' => 'required|email|max:255|unique:users,email,' . $id,
-            'role' => 'required|in:0,1',
+            'role' => 'required|in:0,1,2',
             'active' => 'required|in:0,1',
             'password' => 'nullable|string|min:8|confirmed',
         ]);

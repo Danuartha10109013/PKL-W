@@ -5,11 +5,23 @@
 @endsection
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Terjadi kesalahan:</strong>
+        <ul class="mb-0 mt-1">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
     <div class="mb-3">
         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
             <i class="bx bx-user-plus"></i> Buat User Baru
         </a>
     </div>
+
 
     <div class="card mt-3">
         <div class="card-header">

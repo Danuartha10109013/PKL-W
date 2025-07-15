@@ -7,6 +7,7 @@ use App\Models\KomisiCostumerM;
 use App\Models\KomisiM;
 use App\Models\KomisiPenjualanM;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,10 +25,16 @@ class KomisiController extends Controller
             $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
             return view('pages.penjualan.index',compact('komisis','komisi_customer','persen','call'));
         }else{
-
+            
             $komisis = KomisiM::orderBy('created_at','desc')->get();
             $komisi = KomisiM::latest()->first();
-            $call= CalculationM::find($komisi->calculation);
+            // dd($komisis);
+            if($komisi){
+                $call= CalculationM::find($komisi->calculation);
+            }else{
+                $call= CalculationM::latest()->first();
+            }
+            
             // dd($komisis);
             $komisi_customer = KomisiCostumerM::orderBy('created_at','desc')->get();
             return view('pages.penjualan.index',compact('komisis','komisi_customer','call'));
@@ -207,18 +214,22 @@ class KomisiController extends Controller
     public function laporan(Request $request)
     {
         // Retrieve filter values
-        $from = $request->input('from');
+       $from = $request->input('from');
         $to = $request->input('to');
-    
-        // Filter data based on the provided dates
+
         if ($from && $to) {
-            $data = KomisiM::whereBetween('created_at', [$from, $to])->get();
+            // Tambahkan 1 hari ke tanggal "to" agar seluruh data pada hari itu juga ikut terambil
+            $toPlusOne = Carbon::parse($to)->addDay();
+
+            $data = KomisiM::where('created_at', '>=', $from)
+                        ->where('created_at', '<', $toPlusOne)
+                        ->get();
         } else {
-            $data = KomisiM::all(); // Default to all records if no filter applied
+            $data = KomisiM::all();
         }
     
         // Calculate the sum
-        $sum = $data->sum('se');
+        $sum = $data->sum('it');
     
         // Pass data and filter parameters to the view
         return view('pages.admin.laporan.komisi', compact('data', 'sum', 'from', 'to'));
@@ -246,21 +257,23 @@ class KomisiController extends Controller
     
 public function dibayar($id, $inId)
 {
+    // dd($inId);
     $komisi = KomisiM::findOrFail($inId);
 
     // Tentukan field sesuai division user
     $divisionMap = [
         'Sales Enginer' => 'penerimase',
-        'Aplication Service' => 'penerimaas',
+        'Aplication Service' => 'penerimaap',
         'Administration' => 'penerimaadm',
         'Manager' => 'penerimamng',
     ];
 
     $user = User::findOrFail($id);
     $divisionField = $divisionMap[$user->division] ?? null;
-    // dd($divisionField);
+    // dd($divisionField && $komisi->$divisionField);
     if ($divisionField && $komisi->$divisionField) {
         $data = json_decode($komisi->$divisionField, true);
+        // dd($data);
 
         if (is_array($data)) {
             foreach ($data as &$item) {

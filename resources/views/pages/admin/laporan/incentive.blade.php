@@ -163,7 +163,9 @@
                                             <td rowspan="{{ $rowSpan }}">{{ $loop->parent->parent->iteration }}</td>
                                             <td rowspan="{{ $rowSpan }}" class="tanggal">{{ $d->created_at->format('d M Y') }}</td>
                                             <td rowspan="{{ $rowSpan }}">{{ $d->no_it }}</td>
-                                            <td rowspan="{{ $rowSpan }}">Rp. {{ number_format($d->it ?? 0, 0, ',', '.') }}</td>
+                                            <td rowspan="{{ $rowSpan }}" class="it-value">Rp. {{ number_format($d->it ?? 0, 0, ',', '.') }}</td>
+
+                                            <!-- <td rowspan="{{ $rowSpan }}">Rp. {{ number_format($d->it ?? 0, 0, ',', '.') }}</td> -->
                                             @php $printed = true; @endphp
                                         @endif
                                         <td>{{ $division['name'] }}</td>
@@ -198,9 +200,8 @@
         </div>
     </div>
 </div>
-                        <script>
+<script>
     function extractCurrencyFromText(text) {
-        // Cari angka setelah "Rp." lalu ubah ke float
         const match = text.match(/Rp\.\s?([\d.,]+)/);
         if (!match) return 0;
         return parseFloat(match[1].replace(/\./g, '').replace(',', '.')) || 0;
@@ -214,52 +215,91 @@
         }).format(number);
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        let total = 0;
-
-        document.querySelectorAll('.nominal-value').forEach(el => {
-            total += extractCurrencyFromText(el.textContent.trim());
-        });
-
-        // Tampilkan ke elemen <td id="total-nominal">
-        const totalCell = document.getElementById('total-nominal');
-        if (totalCell) {
-            totalCell.textContent = formatCurrency(total);
-        }
-    });
-</script>
-<script>
-    function filterTable() {
+function filterTable() {
     const fromInput = document.getElementById('from').value;
     const toInput = document.getElementById('to').value;
-    const rows = document.querySelectorAll('#incentive-table-body tr');
+    const rows = document.querySelectorAll('#incentive-table-body tr.data-row');
+    const allGroups = document.querySelectorAll('#incentive-table-body tr');
 
     let fromDate = fromInput ? new Date(fromInput) : null;
     let toDate = toInput ? new Date(toInput) : null;
 
-    // Kurangi 1 hari dari fromDate
-    if (fromDate) {
-        fromDate.setDate(fromDate.getDate() - 1);
-    }
+    // Hapus semua penyesuaian tanggal (jangan +1 hari atau -1 hari)
+    // Normalisasi jam agar akurat dalam perbandingan
+    if (fromDate) fromDate.setHours(0, 0, 0, 0);
+    if (toDate) toDate.setHours(23, 59, 59, 999);
 
-    rows.forEach(row => {
+    let visibleIndexes = new Set();
+
+    allGroups.forEach(row => {
         const tanggalCell = row.querySelector('.tanggal');
         if (!tanggalCell) return;
 
         const rowDate = new Date(tanggalCell.textContent.trim());
-        const show =
-            (!fromDate || rowDate > fromDate) &&
-            (!toDate || rowDate <= toDate);
+        rowDate.setHours(12, 0, 0, 0); // Pastikan berada di tengah hari (menghindari zona waktu)
 
-        row.style.display = show ? '' : 'none';
+        const index = row.getAttribute('data-index');
+
+        const show = (!fromDate || rowDate >= fromDate) &&
+                     (!toDate || rowDate <= toDate);
+
+        if (show) {
+            visibleIndexes.add(index);
+        }
     });
+
+    // Tampilkan hanya baris yang termasuk dalam indeks yang cocok
+    allGroups.forEach(row => {
+        const index = row.getAttribute('data-index');
+        row.style.display = visibleIndexes.has(index) ? '' : 'none';
+    });
+
+    updateTotalIT(visibleIndexes);
 }
 
+    function updateTotalIT(indexes) {
+        let total = 0;
+        const allRows = document.querySelectorAll('#incentive-table-body tr');
+
+        allRows.forEach(row => {
+            const index = row.getAttribute('data-index');
+            const itCell = row.querySelector('.it-value');
+
+            if (itCell && indexes.has(index)) {
+                total += extractCurrencyFromText(itCell.textContent.trim());
+            }
+        });
+
+        document.getElementById('total-nominal').textContent = formatCurrency(total);
+    }
 
     function resetFilter() {
         document.getElementById('from').value = '';
         document.getElementById('to').value = '';
-        filterTable();
+        const allRows = document.querySelectorAll('#incentive-table-body tr');
+        const allIndexes = new Set();
+
+        allRows.forEach(row => {
+            row.style.display = '';
+            const index = row.getAttribute('data-index');
+            if (index) allIndexes.add(index);
+        });
+
+        updateTotalIT(allIndexes);
     }
+
+    // Hitung total awal saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('#incentive-table-body tr');
+        const indexSet = new Set();
+
+        rows.forEach(row => {
+            const index = row.getAttribute('data-index');
+            if (index) indexSet.add(index);
+        });
+
+        updateTotalIT(indexSet);
+    });
 </script>
+
 @endsection
