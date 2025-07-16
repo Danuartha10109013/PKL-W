@@ -204,7 +204,35 @@
                                     @if ($bayar === 'Sudah Dibayar')
                                         <p class="text-success text-left">{{ $bayar }}</p>
                                         @if ($status === 'Belum dikonfirmasi')
-                                            <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a>
+                                            {{-- <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a> --}}
+                                            <!-- Modal Konfirmasi Penerimaan -->
+                                            <div class="modal fade" id="modalTerima{{$d->id}}" tabindex="-1" aria-labelledby="modalLabelTerima{{$d->id}}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form action="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalLabelTerima{{$d->id}}">Konfirmasi Penerimaan Insentif</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Apakah Anda yakin telah menerima pembayaran insentif ini?</p>
+
+                                                                <div class="mb-3">
+                                                                    <label for="bukti_terima_{{$d->id}}" class="form-label">Upload Bukti Penerimaan</label>
+                                                                    <input type="file" class="form-control" id="bukti_terima_{{$d->id}}" name="bukti_terima" accept="image/*" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-success">Konfirmasi</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                         @endif
                                     @elseif ($bayar === 'Belum Dibayar')
                                         <strong>Status:</strong> {{ $bayar }} <br>
