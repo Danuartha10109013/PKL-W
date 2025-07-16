@@ -48,6 +48,7 @@
                             <th>No. PO</th>
                             <th>No. JO</th>
                             <th>IT SALES</th>
+                            <th>Pendapatan Perusahaan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,6 +63,7 @@
                             <td>{{ $d->no_po }}</td>
                             <td>{{ $d->no_jo }}</td>
                             <td>Rp. {{ number_format($d->it, 2, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($d->gp - $d->it, 2, ',', '.') }}</td>
                             
                         </tr>
                         @endforeach

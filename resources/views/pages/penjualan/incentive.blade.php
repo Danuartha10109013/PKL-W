@@ -1,7 +1,7 @@
 @extends('layout.admin.main')
 
 @section('title')
-    Kelola User || {{ Auth::user()->name }}
+    Laporan Incentive || {{ Auth::user()->name }}
 @endsection
 
 @section('content')
@@ -134,7 +134,7 @@
                             <th>NO</th>
                             <th>Tanggal</th>
                             <th>No. IT</th>
-                            <th>Total Incentive team</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="incentive-table-body">
@@ -146,8 +146,8 @@
                                 {{ $d->no_it }}</td>
 
                             <td>
-
-                                @php
+                                <a href="{{route('pegawai.penerima.incentive.detail',$d->id)}}" class="btn btn-primary" title="Lihat Detail"><i class="bx bxs-show"></i></a>
+                                {{-- @php
                                     $divisionMap = [
                                         'Sales Enginer' => ['penerima' => 'penerimase', 'nominal' => 'se'],
                                         'Aplication Service' => ['penerima' => 'penerimaap', 'nominal' => 'as'],
@@ -213,7 +213,7 @@
                                             @endforeach
                                         </ul>
                                     @endif
-                                @endforeach
+                                @endforeach --}}
 
 
                             </td>
@@ -222,10 +222,10 @@
                         @endforeach
 
                         
-                        <tr>
+                        {{-- <tr>
                             <td colspan="3" class="text text-center">TOTAL</td>
                             <td id="total-nominal">Rp. 0,00</td>
-                        </tr>
+                        </tr> --}}
 
                         <script>
     function extractCurrencyFromText(text) {

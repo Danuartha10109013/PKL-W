@@ -21,6 +21,11 @@ class TargetController extends Controller
         return view('pages.admin.laporan.incentive',compact('data','sum'));
     }
 
+    public function detail($id){
+        $data = KomisiM::find($id);
+        return view('pages.penjualan.incentive_detail', compact('data'));
+    }
+
     // public function index()
     // {
     //     $dataPerBulan = KomisiM::select(
@@ -183,13 +188,15 @@ class TargetController extends Controller
     return view('pages.penerima.index', compact('data', 'sum', 'from', 'to', 'division', 'penerimaCount'));
 }
 
-
-        public function confirmation($id, $inId)
+public function confirmation(Request $request, $id, $inId)
 {
-    $komisi = KomisiM::findOrFail($inId);
-    $userId = (string) $id; // pastikan dalam bentuk string karena di JSON tersimpan sebagai string
+    $request->validate([
+        'bukti_terima' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
-    // Daftar kolom JSON yang mungkin menyimpan data user
+    $komisi = KomisiM::findOrFail($inId);
+    $userId = (string) $id; // pastikan string agar cocok di JSON
+
     $fields = ['penerimase', 'penerimaap', 'penerimaadm', 'penerimamng'];
 
     foreach ($fields as $field) {
@@ -200,6 +207,19 @@ class TargetController extends Controller
 
             foreach ($data as &$item) {
                 if (isset($item['id']) && $item['id'] == $userId) {
+                    // Upload gambar bukti_terima
+                    if($item['dibayar'] == 0){
+                        return redirect()->back()->with('error','pembayaran belum dilakukan, mohon hubungi admin');
+                    }
+                    if ($request->hasFile('bukti_terima')) {
+                        $file = $request->file('bukti_terima');
+                        $filename = time() . '_' . $file->getClientOriginalName();
+                        $file->storeAs('public/bukti_terima', $filename);
+                        $path = 'storage/bukti_terima/' . $filename;
+
+                        $item['bukti_terima'] = $path;
+                    }
+
                     $item['status'] = 1;
                     $updated = true;
                     break;
@@ -208,15 +228,50 @@ class TargetController extends Controller
 
             if ($updated) {
                 $komisi->$field = json_encode($data);
-                break; // berhenti setelah satu kolom ditemukan dan diubah
+                break; // cukup satu field diubah
             }
         }
     }
 
     $komisi->save();
 
-    return redirect()->back()->with('success', 'Status berhasil dikonfirmasi.');
+    return redirect()->back()->with('success', 'Status berhasil dikonfirmasi dengan bukti terima.');
 }
+
+
+//         public function confirmation($id, $inId)
+// {
+//     $komisi = KomisiM::findOrFail($inId);
+//     $userId = (string) $id; // pastikan dalam bentuk string karena di JSON tersimpan sebagai string
+
+//     // Daftar kolom JSON yang mungkin menyimpan data user
+//     $fields = ['penerimase', 'penerimaap', 'penerimaadm', 'penerimamng'];
+
+//     foreach ($fields as $field) {
+//         $data = json_decode($komisi->$field, true);
+
+//         if (is_array($data)) {
+//             $updated = false;
+
+//             foreach ($data as &$item) {
+//                 if (isset($item['id']) && $item['id'] == $userId) {
+//                     $item['status'] = 1;
+//                     $updated = true;
+//                     break;
+//                 }
+//             }
+
+//             if ($updated) {
+//                 $komisi->$field = json_encode($data);
+//                 break; // berhenti setelah satu kolom ditemukan dan diubah
+//             }
+//         }
+//     }
+
+//     $komisi->save();
+
+//     return redirect()->back()->with('success', 'Status berhasil dikonfirmasi.');
+// }
 
 public function catatan(Request $request, $id, $inId)
 {

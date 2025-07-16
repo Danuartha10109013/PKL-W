@@ -1,7 +1,7 @@
 @extends('layout.admin.main')
 
 @section('title')
-    Kelola User || {{ Auth::user()->name }}
+    Laporan Incentive || {{ Auth::user()->name }}
 @endsection
 
 @section('content')
@@ -184,9 +184,8 @@
 
                         <!-- Total Incentive (JS akan update nilai ini) -->
                         <tr>
-                            <td colspan="3" class="text text-center">TOTAL</td>
-                            <td id="total-nominal">Rp. 0,00</td>
-                            <td colspan="4"></td>
+                            <td style="font-weight: bold"  colspan="3" class="text text-center">TOTAL</td>
+                            <td colspan="5" class="text-center" style="font-weight: bold" id="total-nominal">Rp. 0,00</td>
                         </tr>
                     </tbody>
                 </table>

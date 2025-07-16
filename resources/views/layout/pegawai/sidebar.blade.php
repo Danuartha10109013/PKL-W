@@ -42,6 +42,12 @@
         <div data-i18n="Analytics">Laporan Penerima Incentive</div>
       </a>
     </li>
+    {{-- <li class="menu-item {{ request()->routeIs('pegawai.pendapatan') ? 'active' : '' }}">
+      <a href="{{ route('pegawai.pendapatan') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-coin"></i>
+        <div data-i18n="Analytics">Laporan Pendapatan</div>
+      </a>
+    </li> --}}
     
 
     <!-- Layouts -->

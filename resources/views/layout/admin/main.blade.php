@@ -119,6 +119,14 @@
                       confirmButtonColor: '#ff0000'
                     });
                   @endif
+                  @if ($message = Session::get('error'))
+                    Swal.fire({
+                      title: 'Error!',
+                      text: '{{ $message }}',
+                      icon: 'error',
+                      confirmButtonColor: '#ff0000'
+                    });
+                  @endif
                 });
               </script>
               

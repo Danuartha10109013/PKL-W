@@ -44,6 +44,9 @@
     #printable-area, #printable-area * {
         visibility: visible;
     }
+    img {
+        display: none;
+    }
 
     #printable-area {
         position: absolute;
@@ -115,6 +118,8 @@
                             <th>NAMA CUSTOMER</th>
                             <th>No. PO</th>
                             <th>No. JO</th>
+                            <th>Bukti pembayaran</th>
+                            <th>Bukti Terima</th>
                             <th>{{$division}}</th>
                         </tr>
                     </thead>
@@ -179,6 +184,20 @@
                             <td>{{ $d->customer_name }}</td>
                             <td>{{ $d->no_po }}</td>
                             <td>{{ $d->no_jo }}</td>
+                            <td>
+                                @if (isset($item['bukti_kirim']) && $item['bukti_kirim'])
+                                    <img src="{{asset($item['bukti_kirim'])}}" width="80px" alt="bukti kirim">
+                                @else
+                                N/A
+                                @endif
+                            </td>
+                            <td>
+                                @if (isset($item['bukti_terima']) && $item['bukti_terima'])
+                                    <img src="{{asset($item['bukti_terima'])}}" width="80px" alt="bukti kirim">
+                                @else
+                                N/A
+                                @endif
+                            </td>
                             <td class="amount-cell">{{ $formattedAmount }}
 
                                 <div class="status-cell mt-2">
@@ -229,7 +248,7 @@
                     <tr><td colspan="7"></td></tr>
                     <tr><td colspan="7"></td></tr>
                     <tr>
-                        <td colspan="6" class="text text-center">TOTAL</td>
+                        <td colspan="8" class="text text-center">TOTAL</td>
                         <td>Rp. {{ number_format($sum, 2, ',', '.') }}</td>
                     </tr>
                 </tbody>

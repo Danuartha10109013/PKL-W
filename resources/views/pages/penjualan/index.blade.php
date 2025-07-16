@@ -72,6 +72,7 @@
                             <th>Total Bottom Of Price</th>
                             <th>Total Sales Price</th>
                             <th>Gross Price</th>
+                            <th>Pendapatan Perusahaan</th>
                             <th>Incentive Team ({{$call->it *100}})%</th>
                             <th>Sales Engineer ({{$call->se *100}})%</th>
                             <th>Application Service ({{$call->as *100}})%</th>
@@ -91,6 +92,9 @@
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->bop, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->total_sp, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->gp, 0, ',', '.') }}</span></td>
+
+                                <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->gp - $komisi->it, 0, ',', '.') }}</span></td>
+                                
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->it, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->se, 0, ',', '.') }}</span></td>
                                 <td><span style="white-space: nowrap;">Rp&nbsp;{{ number_format($komisi->as, 0, ',', '.') }}</span></td>
