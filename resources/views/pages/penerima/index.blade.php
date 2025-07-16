@@ -201,9 +201,8 @@
                             <td class="amount-cell">{{ $formattedAmount }}
 
                                 <div class="status-cell mt-2">
-                                    @if ($bayar === 'Sudah Dibayar')
+                                    @if ($bayar === 'Sudah Dibayar' && $status === 'Belum dikonfirmasi')
                                         <p class="text-success text-left">{{ $bayar }}</p>
-                                        @if ($status === 'Belum dikonfirmasi')
                                             {{-- <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a> --}}
                                             <!-- Modal Konfirmasi Penerimaan -->
                                             <div class="modal fade" id="modalTerima{{$d->id}}" tabindex="-1" aria-labelledby="modalLabelTerima{{$d->id}}" aria-hidden="true">
@@ -233,7 +232,6 @@
                                                 </div>
                                             </div>
 
-                                        @endif
                                     @elseif ($bayar === 'Belum Dibayar')
                                         <strong>Status:</strong> {{ $bayar }} <br>
                                         <a href="#" class="btn btn-danger mb-2 mt-2 {{ $showButtons }}" data-bs-toggle="modal" data-bs-target="#catatanModal{{ $d->id }}">
