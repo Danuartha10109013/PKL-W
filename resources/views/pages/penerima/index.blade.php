@@ -204,6 +204,9 @@
                                     @if ($bayar === 'Sudah Dibayar' && $status === 'Belum dikonfirmasi')
                                         <p class="text-success text-left">{{ $bayar }}</p>
                                             {{-- <a href="{{ route('penerima.incentive.confirmation', ['id' => Auth::user()->id , 'inId' => $d->id]) }}" class="btn btn-primary mt-2 {{ $showButtons }}">Konfirmasi Dibayar</a> --}}
+                                            <button type="button" class="btn btn-primary mt-2 {{ $showButtons }}" data-bs-toggle="modal" data-bs-target="#modalTerima{{$d->id}}">
+                                                Konfirmasi Dibayar
+                                            </button>
                                             <!-- Modal Konfirmasi Penerimaan -->
                                             <div class="modal fade" id="modalTerima{{$d->id}}" tabindex="-1" aria-labelledby="modalLabelTerima{{$d->id}}" aria-hidden="true">
                                                 <div class="modal-dialog">
